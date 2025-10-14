@@ -1,77 +1,84 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ApiService from "../service/ApiService";
-import { useTheme } from '../context/ThemeContext';
+import {
+  Home,
+  ArrowRightLeft,
+  LayoutGrid,
+  Package,
+  Users,
+  ShoppingCart,
+  HandCoins,
+  CircleUser,
+  LogOut,
+  Rocket
+} from 'lucide-react';
 
 const Sidebar = () => {
-  const { isDarkTheme } = useTheme();
   const isAuth = ApiService.isAuthenticated();
   const isAdmin = ApiService.isAdmin();
   const location = useLocation();
-  const navigate = useNavigate(); // Add useNavigate hook
+  const navigate = useNavigate();
 
   const logout = () => {
     ApiService.logout();
-    navigate('/login'); // Navigate to login page after logout
+    navigate('/login');
   };
 
   const isActiveLink = (path) => {
-    return location.pathname === path || location.pathname.startsWith(path + '/');
+    return location.pathname === path || (path !== '/dashboard' && location.pathname.startsWith(path));
   };
 
   const menuItems = [
-    { path: "/dashboard", label: "Dashboard", icon: "📊", show: isAuth },
-    { path: "/transaction", label: "Transactions", icon: "💳", show: isAuth },
-    { path: "/category", label: "Category", icon: "📁", show: isAdmin },
-    { path: "/product", label: "Product", icon: "📦", show: isAdmin },
-    { path: "/supplier", label: "Supplier", icon: "🏢", show: isAdmin },
-    { path: "/purchase", label: "Purchase", icon: "🛒", show: isAuth },
-    { path: "/sell", label: "Sell", icon: "💰", show: isAuth },
-    { path: "/profile", label: "Profile", icon: "👤", show: isAuth },
+    { path: "/dashboard", label: "Dashboard", icon: <Home className="h-4 w-4" />, show: isAuth },
+    { path: "/transaction", label: "Transactions", icon: <ArrowRightLeft className="h-4 w-4" />, show: isAuth },
+    { path: "/category", label: "Category", icon: <LayoutGrid className="h-4 w-4" />, show: isAdmin },
+    { path: "/product", label: "Product", icon: <Package className="h-4 w-4" />, show: isAdmin },
+    { path: "/supplier", label: "Supplier", icon: <Users className="h-4 w-4" />, show: isAdmin },
+    { path: "/purchase", label: "Purchase", icon: <ShoppingCart className="h-4 w-4" />, show: isAuth },
+    { path: "/sell", label: "Sell", icon: <HandCoins className="h-4 w-4" />, show: isAuth },
+    { path: "/profile", label: "Profile", icon: <CircleUser className="h-4 w-4" />, show: isAuth },
   ];
 
   return (
-    <div className={`sidebar ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
-      {/* Sidebar Header */}
-      <div className="sidebar-header">
-        <div className="logo-container">
-          <div className="logo-icon">🚀</div>
-          <h1 className="ims">IMS</h1>
+    <div className="hidden border-r bg-muted/40 md:block">
+      <div className="flex h-full max-h-screen flex-col gap-2">
+        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+          <Link to="/" className="flex items-center gap-2 font-semibold">
+            <Rocket className="h-6 w-6" />
+            <span className="">IMS</span>
+          </Link>
         </div>
-      </div>
-
-      {/* Navigation Links */}
-      <nav className="sidebar-nav">
-        <ul className="nav-links">
-          {menuItems.map((item) => 
-            item.show && (
-              <li key={item.path} className="nav-item">
-                <Link 
-                  to={item.path} 
-                  className={`nav-link ${isActiveLink(item.path) ? 'active' : ''}`}
+        <div className="flex-1">
+          <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+            {menuItems.map((item) =>
+              item.show && (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${
+                    isActiveLink(item.path) ? "bg-muted text-primary" : ""
+                  }`}
                 >
-                  <span className="nav-icon">{item.icon}</span>
-                  <span className="nav-text">{item.label}</span>
-                  <span className="active-indicator"></span>
+                  {item.icon}
+                  {item.label}
                 </Link>
-              </li>
-            )
-          )}
-        </ul>
-      </nav>
-
-      {/* Logout Section */}
-      {isAuth && (
-        <div className="sidebar-footer">
-          <button 
-            className="logout-link" 
-            onClick={logout}
-          >
-            <span className="logout-icon">🚪</span>
-            <span className="logout-text">Logout</span>
-          </button>
+              )
+            )}
+          </nav>
         </div>
-      )}
+        {isAuth && (
+            <div className="mt-auto p-4">
+                <button
+                    onClick={logout}
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                </button>
+            </div>
+        )}
+      </div>
     </div>
   );
 };
