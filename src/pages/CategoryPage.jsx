@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../component/Layout";
+import Layout from "../components/component/Layout";
 import ApiService from "../service/ApiService";
 import {
   Card,

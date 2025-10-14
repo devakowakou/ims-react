@@ -14,7 +14,7 @@ import TransactionsPage from "./pages/TransactionsPage";
 import SellPage from "./pages/SellPage";
 import ProfilePage from "./pages/ProfilePage";
 import TransactionDetailsPage from "./pages/TransactionDetailsPage";
-import DashboardPage from "./pages/DashboardPage";
+import Dashboard from "./pages/Dashboard";
 import ApiService from './service/ApiService';
 
 function App() {
@@ -38,7 +38,7 @@ function App() {
           <Route path="/transaction" element={<ProtectedRoute element={<TransactionsPage/>}/>}/>
           <Route path="/transaction/:transactionId" element={<ProtectedRoute element={<TransactionDetailsPage/>}/>}/>
           <Route path="/profile" element={<ProtectedRoute element={<ProfilePage/>}/>}/>
-          <Route path="/dashboard" element={<ProtectedRoute element={<DashboardPage/>}/>}/>
+          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard/>}/>}/>
           <Route path="*" element={<LoginPage/>}/>
         </Routes>
       </BrowserRouter>

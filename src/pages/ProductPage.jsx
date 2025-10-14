@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../component/Layout";
+import Layout from "../components/component/Layout";
 import ProductService from "../service/ProductService";
 import { useNavigate } from "react-router-dom";
-import PaginationComponent from "../component/PaginationComponent";
+import PaginationComponent from "../components/component/PaginationComponent";
 import {
   Card,
   CardContent,

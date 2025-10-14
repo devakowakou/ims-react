@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../component/Layout";
+import Layout from "../components/Layout";
 import ApiService from "../service/ApiService";
 import {
   LineChart,
@@ -135,7 +135,7 @@ const DashboardPage = () => {
                     {transactionData.reduce((acc, cur) => acc + cur.count, 0)}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                    in {new Date(selectedYear, selectedMonth - 1).toLocaleString(\'default\', { month: \'long\', year: \'numeric\' })}
+                    in {new Date(selectedYear, selectedMonth - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
                 </p>
             </CardContent>
           </Card>
@@ -149,7 +149,7 @@ const DashboardPage = () => {
                     {transactionData.reduce((acc, cur) => acc + cur.quantity, 0)}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                    in {new Date(selectedYear, selectedMonth - 1).toLocaleString(\'default\', { month: \'long\', year: \'numeric\' })}
+                    in {new Date(selectedYear, selectedMonth - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
                 </p>
             </CardContent>
           </Card>
@@ -163,7 +163,7 @@ const DashboardPage = () => {
                     ${transactionData.reduce((acc, cur) => acc + cur.amount, 0).toFixed(2)}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                    in {new Date(selectedYear, selectedMonth - 1).toLocaleString(\'default\', { month: \'long\', year: \'numeric\' })}
+                    in {new Date(selectedYear, selectedMonth - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
                 </p>
             </CardContent>
           </Card>
@@ -208,9 +208,9 @@ const DashboardPage = () => {
             <CardContent>
                 <div className="grid gap-4 sm:grid-cols-4">
                     <div className="flex flex-col gap-2">
-                        <Button onClick={() => setSelectedData(\'count\')} variant={selectedData === \'count\' ? \'outline\' : \'ghost\'}>Total Transactions</Button>
-                        <Button onClick={() => setSelectedData(\'quantity\')} variant={selectedData === \'quantity\' ? \'outline\' : \'ghost\'}>Product Quantity</Button>
-                        <Button onClick={() => setSelectedData(\'amount\')} variant={selectedData === \'amount\' ? \'outline\' : \'ghost\'}>Amount</Button>
+                        <Button onClick={() => setSelectedData('count')} variant={selectedData === 'count' ? 'outline' : 'ghost'}>Total Transactions</Button>
+                        <Button onClick={() => setSelectedData('quantity')} variant={selectedData === 'quantity' ? 'outline' : 'ghost'}>Product Quantity</Button>
+                        <Button onClick={() => setSelectedData('amount')} variant={selectedData === 'amount' ? 'outline' : 'ghost'}>Amount</Button>
                     </div>
                     <div className="col-span-3">
                         <ChartContainer
@@ -227,7 +227,7 @@ const DashboardPage = () => {
                             />
                             <ChartTooltip
                                 cursor={false}
-                                content={<ChartTooltipContent indicator="line" />}\
+                                content={<ChartTooltipContent indicator="line" />}
                             />
                             <Line
                                 dataKey={selectedData}
