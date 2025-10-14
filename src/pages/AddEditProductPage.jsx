@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../components/Layout";
+import Layout from "../components/component/Layout";
 import ApiService from "../service/ApiService";
 import { useNavigate, useParams } from "react-router-dom";
 import {

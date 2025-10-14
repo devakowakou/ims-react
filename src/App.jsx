@@ -15,7 +15,7 @@ import SellPage from "./pages/SellPage";
 import ProfilePage from "./pages/ProfilePage";
 import TransactionDetailsPage from "./pages/TransactionDetailsPage";
 import Dashboard from "./pages/Dashboard";
-import ApiService from './service/ApiService';
+import ApiService from './service/ApiService.js';
 
 function App() {
   const isAuth = ApiService.isAuthenticated();
