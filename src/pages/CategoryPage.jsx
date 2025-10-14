@@ -1,15 +1,41 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../component/Layout";
 import ApiService from "../service/ApiService";
-import { useTheme } from '../context/ThemeContext';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from "@/components/ui/dialog";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const CategoryPage = () => {
-  const { isDarkTheme } = useTheme();
   const [categories, setCategories] = useState([]);
   const [categoryName, setCategoryName] = useState("");
   const [message, setMessage] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingCategoryId, setEditingCategoryId] = useState(null);
 
   // Fetch the categories from our backend
   useEffect(() => {
@@ -21,7 +47,7 @@ const CategoryPage = () => {
         }
       } catch (error) {
         showMessage(
-          error.response?.data?.message || "Error Loggin in a User: " + error
+          error.response?.data?.message || "Error fetching categories: " + error
         );
       }
     };
@@ -41,48 +67,38 @@ const CategoryPage = () => {
       window.location.reload(); // Reload page
     } catch (error) {
       showMessage(
-        error.response?.data?.message || "Error Loggin in a User: " + error
+        error.response?.data?.message || "Error adding category: " + error
       );
     }
   };
 
   // Edit category
-  const editCategory = async () => {
+  const editCategory = async (categoryId) => {
     try {
-      await ApiService.updateCategory(editingCategoryId, {
+      await ApiService.updateCategory(categoryId, {
         name: categoryName,
       });
-      showMessage("Category successfully Updated");
-      setIsEditing(false);
+      showMessage("Category successfully updated");
       setCategoryName(""); // Clear input
       window.location.reload(); // Reload page
     } catch (error) {
       showMessage(
-        error.response?.data?.message || "Error Loggin in a User: " + error
+        error.response?.data?.message || "Error updating category: " + error
       );
     }
   };
 
-  // Populate the edit category data
-  const handleEditCategory = (category) => {
-    setIsEditing(true);
-    setEditingCategoryId(category.id);
-    setCategoryName(category.name);
-  };
-
   // Delete category
   const handleDeleteCategory = async (categoryId) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
       try {
         await ApiService.deleteCategory(categoryId);
-        showMessage("Category successfully Deleted");
+        showMessage("Category successfully deleted");
         window.location.reload(); // Reload page
       } catch (error) {
         showMessage(
-          error.response?.data?.message || "Error Deleting in a Category: " + error
+          error.response?.data?.message || "Error deleting category: " + error
         );
       }
-    }
   };
 
   // Method to show message or errors
@@ -95,55 +111,91 @@ const CategoryPage = () => {
 
   return (
     <Layout>
-      {message && <div className="message">{message}</div>}
-      <div className={`category-page ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
-        
-        <div className="category-header">
-          <h1>Categories</h1>
-          <div className="add-cat">
-            <input
-              value={categoryName}
-              type="text"
-              placeholder="Category Name"
-              onChange={(e) => setCategoryName(e.target.value)}
-            />
-
-            {!isEditing ? (
-              <button onClick={addCategory}>Add Category</button>
-            ) : (
-              <button onClick={editCategory}>Edit Category</button>
-            )}
-          </div>
-        </div>
-
-        {categories && (
-          <ul className="category-list">
-            {categories.map((category) => (
-              <li className="category-item" key={category.id}>
-                <div className="category-info">
-                  <span className="category-name">{category.name}</span>
-                  <span className="category-id">ID: {category.id}</span>
-                </div>
-
-                <div className="category-actions">
-                  <button 
-                    onClick={() => handleEditCategory(category)}
-                    className="edit-btn"
-                  >
-                    Edit
-                  </button>
-                  <button 
-                    onClick={() => handleDeleteCategory(category.id)}
-                    className="delete-btn"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+        <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
+            {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Categories</CardTitle>
+                        <CardDescription>Manage your product categories</CardDescription>
+                    </div>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button>Add Category</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Add New Category</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <Input
+                                    value={categoryName}
+                                    onChange={(e) => setCategoryName(e.target.value)}
+                                    placeholder="Category Name"
+                                />
+                            </div>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button variant="outline">Cancel</Button>
+                                </DialogClose>
+                                <Button onClick={addCategory}>Add</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </CardHeader>
+                <CardContent>
+                    <ul className="grid gap-4">
+                        {categories.map((category) => (
+                            <li key={category.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg">
+                                <div className="font-medium mb-2 sm:mb-0">{category.name}</div>
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button variant="outline" onClick={() => setCategoryName(category.name)}>Edit</Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Edit Category</DialogTitle>
+                                        </DialogHeader>
+                                        <div className="grid gap-4 py-4">
+                                            <Input
+                                                value={categoryName}
+                                                onChange={(e) => setCategoryName(e.target.value)}
+                                                placeholder="Category Name"
+                                            />
+                                        </div>
+                                        <DialogFooter>
+                                            <DialogClose asChild>
+                                                <Button variant="outline">Cancel</Button>
+                                            </DialogClose>
+                                            <Button onClick={() => editCategory(category.id)}>Save Changes</Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button variant="destructive">Delete</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. This will permanently delete the category.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDeleteCategory(category.id)}>Delete</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </CardContent>
+            </Card>
+        </main>
     </Layout>
   );
 };

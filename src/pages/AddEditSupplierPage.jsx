@@ -2,11 +2,20 @@ import React, { useState, useEffect } from "react";
 import Layout from "../component/Layout";
 import ApiService from "../service/ApiService";
 import { useNavigate, useParams } from "react-router-dom";
-import { useTheme } from '../context/ThemeContext';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const AddEditSupplierPage = () => {
-  const { isDarkTheme } = useTheme();
-  const { supplierId } = useParams("");
+  const { supplierId } = useParams();
   const [name, setName] = useState("");
   const [contactInfo, setContactInfo] = useState("");
   const [address, setAddress] = useState("");
@@ -47,16 +56,16 @@ const AddEditSupplierPage = () => {
       if (isEditing) {
         await ApiService.updateSupplier(supplierId, supplierData);
         showMessage("Supplier Edited successfully");
-        navigate("/supplier")
+        navigate("/supplier");
       } else {
         await ApiService.addSupplier(supplierData);
         showMessage("Supplier Added successfully");
-        navigate("/supplier")
+        navigate("/supplier");
       }
     } catch (error) {
       showMessage(
         error.response?.data?.message ||
-          "Error Getting a Supplier by Id: " + error
+          "Error Saving a Supplier: " + error
       );
     }
   };
@@ -71,19 +80,19 @@ const AddEditSupplierPage = () => {
 
   return (
     <Layout>
-      {message && <div className="message">{message}</div>}
-      <div className={`supplier-form-page ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
-        <div className="form-container">
-          <div className="form-header">
-            <h1>{isEditing ? "✏️ Edit Supplier" : "✨ Add New Supplier"}</h1>
-            <p>{isEditing ? "Update your supplier details" : "Fill in the details to add a new supplier"}</p>
-          </div>
-          
-          <form onSubmit={handleSubmit} className="supplier-form">
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Supplier Name</label>
-                <input
+      <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
+        {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
+        <Card>
+          <CardHeader>
+            <CardTitle>{isEditing ? "Edit Supplier" : "Add New Supplier"}</CardTitle>
+            <CardDescription>{isEditing ? "Update your supplier details" : "Fill in the details to add a new supplier"}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Supplier Name</Label>
+                <Input
+                  id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -92,9 +101,10 @@ const AddEditSupplierPage = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <label>Contact Info</label>
-                <input
+              <div className="grid gap-2">
+                <Label htmlFor="contactInfo">Contact Info</Label>
+                <Input
+                  id="contactInfo"
                   value={contactInfo}
                   onChange={(e) => setContactInfo(e.target.value)}
                   required
@@ -103,9 +113,10 @@ const AddEditSupplierPage = () => {
                 />
               </div>
 
-              <div className="form-group full-width">
-                <label>Address</label>
-                <input
+              <div className="grid gap-2 md:col-span-2">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   required
@@ -113,17 +124,15 @@ const AddEditSupplierPage = () => {
                   placeholder="Enter full address"
                 />
               </div>
-            </div>
-
-            <div className="form-actions">
-              <button type="submit" className="submit-btn">
-                <span className="btn-icon">{isEditing ? "💾" : "🚀"}</span>
-                {isEditing ? "Update Supplier" : "Add Supplier"}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+              <CardFooter className="md:col-span-2">
+                <Button type="submit" className="ml-auto">
+                  {isEditing ? "Update Supplier" : "Add Supplier"}
+                </Button>
+              </CardFooter>
+            </form>
+          </CardContent>
+        </Card>
+      </main>
     </Layout>
   );
 };

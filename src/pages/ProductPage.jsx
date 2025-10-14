@@ -1,12 +1,31 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../component/Layout";
-import ApiService from "../service/ApiService";
+import ProductService from "../service/ProductService";
 import { useNavigate } from "react-router-dom";
 import PaginationComponent from "../component/PaginationComponent";
-import { useTheme } from '../context/ThemeContext';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter
+} from "@/components/ui/card";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const ProductPage = () => {
-  const { isDarkTheme } = useTheme();
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -20,7 +39,7 @@ const ProductPage = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const productData = await ApiService.getAllProducts();
+        const productData = await ProductService.getAllProducts();
 
         if (productData.status === 200) {
           setTotalPages(Math.ceil(productData.products.length / itemsPerPage));
@@ -44,9 +63,8 @@ const ProductPage = () => {
 
   // Delete a product
   const handleDeleteProduct = async (productId) => {
-    if (window.confirm("Are you sure you want to delete this Product?")) {
       try {
-        await ApiService.deleteProduct(productId);
+        await ProductService.deleteProduct(productId);
         showMessage("Product successfully Deleted");
         window.location.reload(); // reload page
       } catch (error) {
@@ -55,7 +73,6 @@ const ProductPage = () => {
             "Error Deleting a product: " + error
         );
       }
-    }
   };
 
   // Method to show message or errors
@@ -68,96 +85,82 @@ const ProductPage = () => {
 
   return (
     <Layout>
-      {message && <div className="message">{message}</div>}
-
-      <div className={`product-page ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
-        <div className="product-container">
-          <div className="product-header">
-            <div className="header-content">
-              <h1>🎯 Products</h1>
-              <p>Manage your product inventory with ease</p>
-            </div>
-            <button
-              className="add-product-btn"
-              onClick={() => navigate("/add-product")}
-            >
-              <span className="btn-icon">✨</span>
-              Add New Product
-            </button>
-          </div>
-
-          {products && products.length > 0 ? (
-            <div className="product-list">
-              {products.map((product) => (
-                <div key={product.id} className="product-item">
-                  <div className="product-image-container">
-                    <img
-                      className="product-image"
-                      src={product.imageUrl || '/default-product.png'}
-                      alt={product.name}
-                      onError={(e) => {
-                        e.target.src = '/default-product.png';
-                      }}
-                    />
-                    <div className={`stock-badge ${product.stockQuantity > 0 ? 'in-stock' : 'out-of-stock'}`}>
-                      {product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of stock'}
+        <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
+            {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Products</CardTitle>
+                        <CardDescription>Manage your product inventory with ease</CardDescription>
                     </div>
-                  </div>
-
-                  <div className="product-info">
-                    <h3 className="product-name">{product.name}</h3>
-                    <div className="product-details">
-                      <div className="detail-row">
-                        <span className="detail-label">SKU:</span>
-                        <span className="sku-value">{product.sku}</span>
-                      </div>
-                      <div className="detail-row">
-                        <span className="detail-label">Price:</span>
-                        <span className="price-value">${product.price}</span>
-                      </div>
+                    <Button onClick={() => navigate("/add-product")}>Add New Product</Button>
+                </CardHeader>
+                <CardContent>
+                {products && products.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {products.map((product) => (
+                            <Card key={product.id}>
+                                <CardHeader>
+                                    <div className="relative">
+                                        <img
+                                            className="object-cover w-full h-48 rounded-lg"
+                                            src={product.imageUrl || '/default-product.png'}
+                                            alt={product.name}
+                                            onError={(e) => {
+                                                e.target.src = '/default-product.png';
+                                            }}
+                                        />
+                                        <Badge className="absolute top-2 right-2" variant={product.stockQuantity > 0 ? 'success' : 'destructive'}>
+                                            {product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of stock'}
+                                        </Badge>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <h3 className="text-lg font-bold">{product.name}</h3>
+                                    <div className="flex justify-between">
+                                        <p className="text-sm text-gray-500">{product.sku}</p>
+                                        <p className="text-lg font-semibold">${product.price}</p>
+                                    </div>
+                                </CardContent>
+                                <CardFooter className="flex justify-end gap-2">
+                                    <Button variant="outline" onClick={() => navigate(`/edit-product/${product.id}`)}>Edit</Button>
+                                    <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button variant="destructive">Delete</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. This will permanently delete the product.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDeleteProduct(product.id)}>Delete</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                                </CardFooter>
+                            </Card>
+                        ))}
                     </div>
-                  </div>
-
-                  <div className="product-actions">
-                    <button 
-                      className="edit-btn" 
-                      onClick={() => navigate(`/edit-product/${product.id}`)}
-                    >
-                      <span className="action-icon">✏️</span>
-                      Edit
-                    </button>
-                    <button 
-                      className="delete-btn" 
-                      onClick={() => handleDeleteProduct(product.id)}
-                    >
-                      <span className="action-icon">🗑️</span>
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-icon">📦</div>
-              <h3>No Products Found</h3>
-              <p>Get started by adding your first product</p>
-              <button 
-                className="add-first-btn"
-                onClick={() => navigate("/add-product")}
-              >
-                Add Your First Product
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <PaginationComponent
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+                    ) : (
+                        <div className="flex flex-col items-center justify-center gap-4 p-8">
+                            <div className="text-4xl">📦</div>
+                            <h3 className="text-xl font-semibold">No Products Found</h3>
+                            <p>Get started by adding your first product</p>
+                            <Button onClick={() => navigate("/add-product")}>Add Your First Product</Button>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+            <PaginationComponent
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+            />
+        </main>
     </Layout>
   );
 };

@@ -2,15 +2,32 @@ import React, { useState, useEffect } from "react";
 import Layout from "../component/Layout";
 import ApiService from "../service/ApiService";
 import { useNavigate, useParams } from "react-router-dom";
-import { useTheme } from '../context/ThemeContext';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const AddEditProductPage = () => {
-  const { isDarkTheme } = useTheme();
-  const { productId } = useParams("");
+  const { productId } = useParams();
   const [name, setName] = useState("");
   const [sku, setSku] = useState("");
   const [price, setPrice] = useState("");
-  const [stockQuantity, setStokeQuantity] = useState("");
+  const [stockQuantity, setStockQuantity] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
@@ -34,7 +51,7 @@ const AddEditProductPage = () => {
       }
     };
 
-    const fetProductById = async () => {
+    const fetchProductById = async () => {
       if (productId) {
         setIsEditing(true);
         try {
@@ -43,7 +60,7 @@ const AddEditProductPage = () => {
             setName(productData.product.name);
             setSku(productData.product.sku);
             setPrice(productData.product.price);
-            setStokeQuantity(productData.product.stockQuantity);
+            setStockQuantity(productData.product.stockQuantity);
             setCategoryId(productData.product.categoryId);
             setDescription(productData.product.description);
             setImageUrl(productData.product.imageUrl);
@@ -60,10 +77,9 @@ const AddEditProductPage = () => {
     };
 
     fetchCategories();
-    if (productId) fetProductById();
+    if (productId) fetchProductById();
   }, [productId]);
 
-  // Method to show message or errors
   const showMessage = (msg) => {
     setMessage(msg);
     setTimeout(() => {
@@ -75,7 +91,7 @@ const AddEditProductPage = () => {
     const file = e.target.files[0];
     setImageFile(file);
     const reader = new FileReader();
-    reader.onloadend = () => setImageUrl(reader.result); // user imageurl to preview the image to upload
+    reader.onloadend = () => setImageUrl(reader.result);
     reader.readAsDataURL(file);
   };
 
@@ -111,20 +127,19 @@ const AddEditProductPage = () => {
 
   return (
     <Layout>
-      {message && <div className="message">{message}</div>}
-
-      <div className={`product-form-page ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
-        <div className="form-container">
-          <div className="form-header">
-            <h1>{isEditing ? "✏️ Edit Product" : "✨ Add New Product"}</h1>
-            <p>{isEditing ? "Update your product details" : "Fill in the details to add a new product"}</p>
-          </div>
-          
-          <form onSubmit={handleSubmit} className="product-form">
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Product Name</label>
-                <input
+      <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
+        {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
+        <Card>
+          <CardHeader>
+            <CardTitle>{isEditing ? "Edit Product" : "Add New Product"}</CardTitle>
+            <CardDescription>{isEditing ? "Update your product details" : "Fill in the details to add a new product"}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Product Name</Label>
+                <Input
+                  id="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -132,10 +147,10 @@ const AddEditProductPage = () => {
                   placeholder="Enter product name"
                 />
               </div>
-
-              <div className="form-group">
-                <label>SKU</label>
-                <input
+              <div className="grid gap-2">
+                <Label htmlFor="sku">SKU</Label>
+                <Input
+                  id="sku"
                   type="text"
                   value={sku}
                   onChange={(e) => setSku(e.target.value)}
@@ -143,21 +158,21 @@ const AddEditProductPage = () => {
                   placeholder="Enter SKU"
                 />
               </div>
-
-              <div className="form-group">
-                <label>Stock Quantity</label>
-                <input
+              <div className="grid gap-2">
+                <Label htmlFor="stockQuantity">Stock Quantity</Label>
+                <Input
+                  id="stockQuantity"
                   type="number"
                   value={stockQuantity}
-                  onChange={(e) => setStokeQuantity(e.target.value)}
+                  onChange={(e) => setStockQuantity(e.target.value)}
                   required
                   placeholder="Enter quantity"
                 />
               </div>
-
-              <div className="form-group">
-                <label>Price ($)</label>
-                <input
+              <div className="grid gap-2">
+                <Label htmlFor="price">Price ($)</Label>
+                <Input
+                  id="price"
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
@@ -166,65 +181,47 @@ const AddEditProductPage = () => {
                   step="0.01"
                 />
               </div>
-
-              <div className="form-group full-width">
-                <label>Description</label>
-                <textarea
+              <div className="grid gap-2 md:col-span-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Enter product description"
                   rows="4"
                 />
               </div>
-
-              <div className="form-group">
-                <label>Category</label>
-                <select
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                  required
-                >
-                  <option value="">Select a category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
+              <div className="grid gap-2">
+                <Label htmlFor="category">Category</Label>
+                <Select value={categoryId} onValueChange={setCategoryId} required>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {categories.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
               </div>
-
-              <div className="form-group full-width">
-                <label>Product Image</label>
-                <div className="file-upload">
-                  <input 
-                    type="file" 
-                    onChange={handleImageChange} 
-                    accept="image/*"
-                    className="file-input"
-                  />
-                  <div className="upload-placeholder">
-                    <span className="upload-icon">📷</span>
-                    <span>Choose product image</span>
-                  </div>
-                </div>
-                
+              <div className="grid gap-2 md:col-span-2">
+                <Label htmlFor="image">Product Image</Label>
+                <Input id="image" type="file" onChange={handleImageChange} accept="image/*" />
                 {imageUrl && (
-                  <div className="image-preview-container">
-                    <img src={imageUrl} alt="preview" className="image-preview" />
+                  <div className="mt-4">
+                    <img src={imageUrl} alt="preview" className="rounded-lg object-cover w-full h-auto max-h-64" />
                   </div>
                 )}
               </div>
-            </div>
-
-            <div className="form-actions">
-              <button type="submit" className="submit-btn">
-                <span className="btn-icon">{isEditing ? "💾" : "🚀"}</span>
-                {isEditing ? "Update Product" : "Add Product"}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+              <CardFooter className="md:col-span-2">
+                <Button type="submit" className="ml-auto">{isEditing ? "Update Product" : "Add Product"}</Button>
+              </CardFooter>
+            </form>
+          </CardContent>
+        </Card>
+      </main>
     </Layout>
   );
 };

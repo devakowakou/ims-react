@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../component/Layout";
-import ApiService from "../service/ApiService";
-import { useTheme } from '../context/ThemeContext';
+import UserService from "../service/UserService";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const ProfilePage = () => {
-  const { isDarkTheme } = useTheme();
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const userInfo = await ApiService.getLoggedInUsesInfo();
+        const userInfo = await UserService.getLoggedInUsesInfo();
         setUser(userInfo);
       } catch (error) {
         showMessage(
-          error.response?.data?.message || "Error Loggin in a User: " + error
+          error.response?.data?.message || "Error fetching user info: " + error
         );
       }
     };
@@ -42,56 +48,41 @@ const ProfilePage = () => {
 
   return (
     <Layout>
-      {message && <div className="message">{message}</div>}
-      <div className={`profile-page ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
+      <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
+        {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
         {user && (
-          <div className="profile-card">
-            <div className="profile-header">
-              <div className="profile-avatar">
-                <span className="avatar-emoji">👋</span>
-              </div>
-              <h1>Hello, {user.name} {getRoleEmoji(user.role)}</h1>
-              <p className="profile-subtitle">Welcome to your personal dashboard</p>
-            </div>
-            
-            <div className="profile-info">
-              <div className="profile-item">
-                <label>👤 Name</label>
-                <span className="user-name">{user.name}</span>
-              </div>
-              <div className="profile-item">
-                <label>📧 Email</label>
-                <span className="user-email">{user.email}</span>
-              </div>
-              <div className="profile-item">
-                <label>📞 Phone Number</label>
-                <span className="user-phone">{user.phoneNumber}</span>
-              </div>
-              <div className="profile-item">
-                <label>🎯 Role</label>
-                <span className="user-role">{user.role} {getRoleEmoji(user.role)}</span>
-              </div>
-            </div>
-
-            <div className="profile-stats">
-              <div className="stat-item">
-                <span className="stat-emoji">⭐</span>
-                <div className="stat-info">
-                  <span className="stat-value">Active</span>
-                  <span className="stat-label">Status</span>
+          <Card>
+            <CardHeader className="flex flex-col items-center text-center">
+              <Avatar className="w-24 h-24 mb-4">
+                <AvatarImage src={`https://i.pravatar.cc/150?u=${user.email}`} alt={user.name} />
+                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <CardTitle className="text-2xl">{user.name} {getRoleEmoji(user.role)}</CardTitle>
+              <CardDescription>Welcome to your personal dashboard</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="p-4 border rounded-lg">
+                  <p className="text-sm font-medium text-gray-500">Name</p>
+                  <p className="text-lg font-semibold">{user.name}</p>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <p className="text-sm font-medium text-gray-500">Email</p>
+                  <p className="text-lg font-semibold">{user.email}</p>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <p className="text-sm font-medium text-gray-500">Phone Number</p>
+                  <p className="text-lg font-semibold">{user.phoneNumber}</p>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <p className="text-sm font-medium text-gray-500">Role</p>
+                  <p className="text-lg font-semibold">{user.role} {getRoleEmoji(user.role)}</p>
                 </div>
               </div>
-              <div className="stat-item">
-                <span className="stat-emoji">📅</span>
-                <div className="stat-info">
-                  <span className="stat-value">Today</span>
-                  <span className="stat-label">Last Login</span>
-                </div>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         )}
-      </div>
+      </main>
     </Layout>
   );
 };

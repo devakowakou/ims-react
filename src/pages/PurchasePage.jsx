@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../component/Layout";
 import ApiService from "../service/ApiService";
-import { useTheme } from '../context/ThemeContext';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const PurchasePage = () => {
-  const { isDarkTheme } = useTheme();
   const [products, setProducts] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [productId, setProductId] = useState("");
@@ -23,7 +40,7 @@ const PurchasePage = () => {
         setSuppliers(supplierData.suppliers);
       } catch (error) {
         showMessage(
-          error.response?.data?.message || "Error Getting Products: " + error
+          error.response?.data?.message || "Error fetching data: " + error
         );
       }
     };
@@ -52,7 +69,7 @@ const PurchasePage = () => {
       resetForm();
     } catch (error) {
       showMessage(
-        error.response?.data?.message || "Error Purchasing Products: " + error
+        error.response?.data?.message || "Error purchasing products: " + error
       );
     }
   };
@@ -74,97 +91,85 @@ const PurchasePage = () => {
 
   return (
     <Layout>
-      {message && <div className="message">{message}</div>}
-      <div className={`purchase-form-page ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
-        <div className="form-container">
-          <div className="form-header">
-            <div className="header-icon">📦</div>
-            <h1>Receive Inventory</h1>
-            <p>Add new stock to your inventory from suppliers</p>
-          </div>
-          
-          <form onSubmit={handleSubmit} className="purchase-form">
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Select Product *</label>
-                <select
-                  value={productId}
-                  onChange={(e) => setProductId(e.target.value)}
-                  required
-                  className="form-select"
-                >
-                  <option value="">Choose a product</option>
-                  {products.map((product) => (
-                    <option key={product.id} value={product.id}>
-                      {product.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label>Select Supplier *</label>
-                <select
-                  value={supplierId}
-                  onChange={(e) => setSupplierId(e.target.value)}
-                  required
-                  className="form-select"
-                >
-                  <option value="">Choose a supplier</option>
-                  {suppliers.map((supplier) => (
-                    <option key={supplier.id} value={supplier.id}>
-                      {supplier.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group full-width">
-                <label>Quantity *</label>
-                <input
-                  type="number"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  required
-                  placeholder="Enter quantity"
-                  min="1"
-                />
-              </div>
-
-              <div className="form-group full-width">
-                <label>Description</label>
-                <input
-                  type="text"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter product description"
-                />
-              </div>
-
-              <div className="form-group full-width">
-                <label>Notes</label>
-                <textarea
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  placeholder="Additional notes or comments"
-                  rows="3"
-                />
-              </div>
-            </div>
-
-            <div className="form-actions">
-              <button type="button" onClick={resetForm} className="reset-btn">
-                <span className="btn-icon">🔄</span>
-                Reset Form
-              </button>
-              <button type="submit" className="submit-btn">
-                <span className="btn-icon">📥</span>
-                Receive Inventory
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+        <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
+            {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Receive Inventory</CardTitle>
+                    <CardDescription>Add new stock to your inventory from suppliers</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-2">
+                            <Label htmlFor="product">Select Product *</Label>
+                            <Select value={productId} onValueChange={setProductId} required>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Choose a product" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {products.map((product) => (
+                                        <SelectItem key={product.id} value={product.id}>
+                                        {product.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="supplier">Select Supplier *</Label>
+                            <Select value={supplierId} onValueChange={setSupplierId} required>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Choose a supplier" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {suppliers.map((supplier) => (
+                                        <SelectItem key={supplier.id} value={supplier.id}>
+                                        {supplier.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="quantity">Quantity *</Label>
+                            <Input
+                                id="quantity"
+                                type="number"
+                                value={quantity}
+                                onChange={(e) => setQuantity(e.target.value)}
+                                required
+                                placeholder="Enter quantity"
+                                min="1"
+                            />
+                        </div>
+                        <div className="grid gap-2 md:col-span-2">
+                            <Label htmlFor="description">Description</Label>
+                            <Input
+                                id="description"
+                                type="text"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="Enter product description"
+                            />
+                        </div>
+                        <div className="grid gap-2 md:col-span-2">
+                            <Label htmlFor="note">Notes</Label>
+                            <Textarea
+                                id="note"
+                                value={note}
+                                onChange={(e) => setNote(e.target.value)}
+                                placeholder="Additional notes or comments"
+                                rows="3"
+                            />
+                        </div>
+                        <CardFooter className="md:col-span-2 flex flex-col sm:flex-row sm:justify-end gap-2">
+                            <Button type="button" variant="outline" onClick={resetForm}>Reset Form</Button>
+                            <Button type="submit">Receive Inventory</Button>
+                        </CardFooter>
+                    </form>
+                </CardContent>
+            </Card>
+        </main>
     </Layout>
   );
 };

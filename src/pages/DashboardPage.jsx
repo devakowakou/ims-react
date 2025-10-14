@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../component/Layout";
 import ApiService from "../service/ApiService";
-import { useTheme } from "../context/ThemeContext";
-import ThemeToggle from "../component/ThemeToggle";
 import {
   LineChart,
   Line,
@@ -10,20 +8,52 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from "recharts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartStyle
+} from "@/components/ui/chart";
+import { Button } from "@/components/ui/button";
+
+const chartConfig = {
+    count: {
+      label: "Count",
+      color: "hsl(var(--chart-1))",
+    },
+    quantity: {
+      label: "Quantity",
+      color: "hsl(var(--chart-2))",
+    },
+    amount: {
+      label: "Amount",
+      color: "hsl(var(--chart-3))",
+    },
+  };
 
 const DashboardPage = () => {
-  const { isDarkTheme } = useTheme();
   const [message, setMessage] = useState("");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedData, setSelectedData] = useState("amount");
-  const [activeButton, setActiveButton] = useState("amount");
   const [transactionData, setTransactionData] = useState([]);
 
-  // Your existing useEffect and data transformation functions remain the same
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,17 +69,17 @@ const DashboardPage = () => {
         }
       } catch (error) {
         showMessage(
-          error.response?.data?.message || "Error Loggin in a User: " + error
+          error.response?.data?.message || "Error fetching data: " + error
         );
       }
     };
     fetchData();
-  }, [selectedMonth, selectedYear, selectedData]);
+  }, [selectedMonth, selectedYear]);
 
   const transformTransactionData = (transactions, month, year) => {
     const dailyData = {};
     const daysInMonths = new Date(year, month, 0).getDate();
-    
+
     for (let day = 1; day <= daysInMonths; day++) {
       dailyData[day] = {
         day,
@@ -71,30 +101,16 @@ const DashboardPage = () => {
         dailyData[day].amount += transaction.totalPrice;
       }
     });
-    
+
     return Object.values(dailyData);
   };
 
-  const getLineColor = (dataType) => {
-    const colors = {
-      count: isDarkTheme ? '#818cf8' : '#6366f1',
-      quantity: isDarkTheme ? '#fbbf24' : '#f59e0b',
-      amount: isDarkTheme ? '#34d399' : '#10b981'
-    };
-    return colors[dataType] || (isDarkTheme ? '#818cf8' : '#6366f1');
+  const handleMonthChange = (value) => {
+    setSelectedMonth(parseInt(value, 10));
   };
 
-  const handleButtonClick = (dataType) => {
-    setSelectedData(dataType);
-    setActiveButton(dataType);
-  };
-
-  const handleMonthChange = (e) => {
-    setSelectedMonth(parseInt(e.target.value, 10));
-  };
-
-  const handleYearChange = (e) => {
-    setSelectedYear(parseInt(e.target.value, 10));
+  const handleYearChange = (value) => {
+    setSelectedYear(parseInt(value, 10));
   };
 
   const showMessage = (msg) => {
@@ -106,125 +122,126 @@ const DashboardPage = () => {
 
   return (
     <Layout>
-      {message && <div className="message">{message}</div>}
-      <div className={`dashboard-page ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
-        {/* Theme Toggle - Now properly positioned */}
-        <div className="theme-toggle-container">
-          <ThemeToggle />
-        </div>
-
-        {/* Centered Header Section */}
-        <div className="dashboard-header">
-          <h1>Transaction Analytics</h1>
-          <p>Monitor your daily transaction metrics</p>
-        </div>
-
-        {/* Rest of your dashboard JSX remains the same */}
-        <div className="button-group">
-          <button 
-            className={activeButton === "count" ? "active" : ""}
-            onClick={() => handleButtonClick("count")}
-          >
-            <span className="button-icon">📊</span>
-            Total Transactions
-          </button>
-          <button 
-            className={activeButton === "quantity" ? "active" : ""}
-            onClick={() => handleButtonClick("quantity")}
-          >
-            <span className="button-icon">📦</span>
-            Product Quantity
-          </button>
-          <button 
-            className={activeButton === "amount" ? "active" : ""}
-            onClick={() => handleButtonClick("amount")}
-          >
-            <span className="button-icon">💰</span>
-            Amount
-          </button>
-        </div>
-
-        <div className="dashboard-content">
-          <div className="filter-section">
-            <div className="filter-group">
-              <label htmlFor="month-select">Select Month:</label>
-              <select id="month-select" value={selectedMonth} onChange={handleMonthChange}>
-                {Array.from({ length: 12 }, (_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {new Date(0, i).toLocaleString("default", { month: "long" })}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label htmlFor="year-select">Select Year:</label>
-              <select id="year-select" value={selectedYear} onChange={handleYearChange}>
-                {Array.from({ length: 5 }, (_, i) => {
-                  const year = new Date().getFullYear() - i;
-                  return (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div>
-
-          <div className="chart-section">
-            <div className="chart-container">
-              <div className="chart-header">
-                <h3>Daily Transactions - {new Date(selectedYear, selectedMonth - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}</h3>
-                <div className="chart-legend">
-                  <div className="legend-item">
-                    <div className="legend-color" style={{backgroundColor: getLineColor(selectedData)}}></div>
-                    <span>{selectedData.charAt(0).toUpperCase() + selectedData.slice(1)}</span>
-                  </div>
+      <div className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
+        {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
+        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+              <CardTitle className="text-sm font-medium">Total Transactions</CardTitle>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-muted-foreground"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold">
+                    {transactionData.reduce((acc, cur) => acc + cur.count, 0)}
                 </div>
-              </div>
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={transactionData}>
-                  <CartesianGrid 
-                    strokeDasharray="3 3" 
-                    stroke={isDarkTheme ? '#374151' : '#f1f5f9'} 
-                    vertical={false}
-                  />
-                  <XAxis 
-                    dataKey="day" 
-                    stroke={isDarkTheme ? '#d1d5db' : '#64748b'}
-                    fontSize={12}
-                    tickLine={false}
-                  />
-                  <YAxis 
-                    stroke={isDarkTheme ? '#d1d5db' : '#64748b'}
-                    fontSize={12}
-                    tickLine={false}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: isDarkTheme ? '#1f2937' : '#ffffff',
-                      border: `1px solid ${isDarkTheme ? '#374151' : '#e2e8f0'}`,
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                      fontSize: '14px',
-                      color: isDarkTheme ? '#f9fafb' : '#1f2937'
-                    }}
-                  />
-                  <Legend />
-                  <Line 
-                    type="monotone"
-                    dataKey={selectedData}
-                    stroke={getLineColor(selectedData)}
-                    strokeWidth={3}
-                    dot={{ fill: getLineColor(selectedData), strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, fill: getLineColor(selectedData) }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+                <p className="text-xs text-muted-foreground">
+                    in {new Date(selectedYear, selectedMonth - 1).toLocaleString(\'default\', { month: \'long\', year: \'numeric\' })}
+                </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+              <CardTitle className="text-sm font-medium">Product Quantity</CardTitle>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-muted-foreground"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold">
+                    {transactionData.reduce((acc, cur) => acc + cur.quantity, 0)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                    in {new Date(selectedYear, selectedMonth - 1).toLocaleString(\'default\', { month: \'long\', year: \'numeric\' })}
+                </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+              <CardTitle className="text-sm font-medium">Amount</CardTitle>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-muted-foreground"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold">
+                    ${transactionData.reduce((acc, cur) => acc + cur.amount, 0).toFixed(2)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                    in {new Date(selectedYear, selectedMonth - 1).toLocaleString(\'default\', { month: \'long\', year: \'numeric\' })}
+                </p>
+            </CardContent>
+          </Card>
         </div>
+        <Card>
+            <ChartStyle id="line-chart" config={chartConfig} />
+            <CardHeader className="flex flex-col md:flex-row md:items-center gap-4">
+                <div className="grid gap-2">
+                    <CardTitle>Transaction Analytics</CardTitle>
+                    <CardDescription>Monitor your daily transaction metrics</CardDescription>
+                </div>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:ml-auto">
+                    <Select value={selectedMonth.toString()} onValueChange={handleMonthChange}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select month" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {Array.from({ length: 12 }, (_, i) => (
+                            <SelectItem key={i + 1} value={(i + 1).toString()}>
+                                {new Date(0, i).toLocaleString("default", { month: "long" })}
+                            </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {Array.from({ length: 5 }, (_, i) => {
+                            const year = new Date().getFullYear() - i;
+                            return (
+                                <SelectItem key={year} value={year.toString()}>
+                                {year}
+                                </SelectItem>
+                            );
+                            })}
+                        </SelectContent>
+                    </Select>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className="grid gap-4 sm:grid-cols-4">
+                    <div className="flex flex-col gap-2">
+                        <Button onClick={() => setSelectedData(\'count\')} variant={selectedData === \'count\' ? \'outline\' : \'ghost\'}>Total Transactions</Button>
+                        <Button onClick={() => setSelectedData(\'quantity\')} variant={selectedData === \'quantity\' ? \'outline\' : \'ghost\'}>Product Quantity</Button>
+                        <Button onClick={() => setSelectedData(\'amount\')} variant={selectedData === \'amount\' ? \'outline\' : \'ghost\'}>Amount</Button>
+                    </div>
+                    <div className="col-span-3">
+                        <ChartContainer
+                            config={chartConfig}
+                            className="min-h-[300px] w-full"
+                        >
+                            <LineChart data={transactionData} id="line-chart">
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="day"
+                                tickLine={false}
+                                tickMargin={10}
+                                axisLine={false}
+                            />
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent indicator="line" />}\
+                            />
+                            <Line
+                                dataKey={selectedData}
+                                type="monotone"
+                                stroke={`var(--color-${selectedData})`}
+                                strokeWidth={2}
+                                dot={false}
+                            />
+                            </LineChart>
+                        </ChartContainer>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
       </div>
     </Layout>
   );

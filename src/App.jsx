@@ -1,7 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Navigate } from 'react-router-dom';
 import { Routes } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import CategoryPage from './pages/CategoryPage';
@@ -16,12 +15,15 @@ import SellPage from "./pages/SellPage";
 import ProfilePage from "./pages/ProfilePage";
 import TransactionDetailsPage from "./pages/TransactionDetailsPage";
 import DashboardPage from "./pages/DashboardPage";
+import ApiService from './service/ApiService';
 
 function App() {
+  const isAuth = ApiService.isAuthenticated();
+
   return (
-    <ThemeProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <LoginPage />} />
           <Route path="/register" element={<RegisterPage/>}/>
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="/category" element={<AdminRoute element={<CategoryPage/>}/>}/>
@@ -40,7 +42,6 @@ function App() {
           <Route path="*" element={<LoginPage/>}/>
         </Routes>
       </BrowserRouter>
-    </ThemeProvider>
   );
 }
 

@@ -2,10 +2,28 @@ import React, { useState, useEffect } from "react";
 import Layout from "../component/Layout";
 import ApiService from "../service/ApiService";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from '../context/ThemeContext';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter
+} from "@/components/ui/card";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button";
 
 const SupplierPage = () => {
-  const { isDarkTheme } = useTheme();
   const [suppliers, setSuppliers] = useState([]);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -40,10 +58,8 @@ const SupplierPage = () => {
   // Delete Supplier
   const handleDeleteSupplier = async (supplierId) => {
     try {
-      if (window.confirm("Are you sure you want to delete this supplier? ")) {
         await ApiService.deleteSupplier(supplierId);
         window.location.reload();
-      }
     } catch (error) {
       showMessage(
         error.response?.data?.message || "Error Deleting a Suppliers: " + error
@@ -53,79 +69,63 @@ const SupplierPage = () => {
 
   return (
     <Layout>
-      {message && <div className="message">{message}</div>}
-      <div className={`supplier-page ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
-        <div className="supplier-container">
-          <div className="supplier-header">
-            <div className="header-content">
-              <h1>🏢 Suppliers</h1>
-              <p>Manage your supplier network</p>
-            </div>
-            <div className="add-sup">
-              <button 
-                onClick={() => navigate("/add-supplier")}
-                className="add-supplier-btn"
-              >
-                <span className="btn-icon">+</span>
-                Add Supplier
-              </button>
-            </div>
-          </div>
-
-          {suppliers && suppliers.length > 0 ? (
-            <div className="suppliers-grid">
-              {suppliers.map((supplier) => (
-                <div className="supplier-card" key={supplier.id}>
-                  <div className="supplier-content">
-                    <div className="supplier-icon">🏢</div>
-                    <div className="supplier-info">
-                      <h3 className="supplier-name">{supplier.name}</h3>
-                      <div className="supplier-details">
-                        <div className="detail-item">
-                          <span className="detail-label">Contact:</span>
-                          <span className="detail-value">{supplier.contactInfo}</span>
-                        </div>
-                        <div className="detail-item">
-                          <span className="detail-label">Address:</span>
-                          <span className="detail-value">{supplier.address}</span>
-                        </div>
-                      </div>
+        <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
+            {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Suppliers</CardTitle>
+                        <CardDescription>Manage your supplier network</CardDescription>
                     </div>
-                  </div>
-                  <div className="supplier-actions">
-                    <button 
-                      onClick={() => navigate(`/edit-supplier/${supplier.id}`)}
-                      className="edit-btn"
-                    >
-                      <span className="action-icon">✏️</span>
-                      Edit
-                    </button>
-                    <button 
-                      onClick={() => handleDeleteSupplier(supplier.id)}
-                      className="delete-btn"
-                    >
-                      <span className="action-icon">🗑️</span>
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-icon">🏢</div>
-              <h3>No Suppliers Found</h3>
-              <p>Start by adding your first supplier</p>
-              <button 
-                className="add-first-btn"
-                onClick={() => navigate("/add-supplier")}
-              >
-                Add Your First Supplier
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
+                    <Button onClick={() => navigate("/add-supplier")}>Add Supplier</Button>
+                </CardHeader>
+                <CardContent>
+                    {suppliers && suppliers.length > 0 ? (
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {suppliers.map((supplier) => (
+                                <Card key={supplier.id}>
+                                    <CardHeader>
+                                        <div className="text-2xl">🏢</div>
+                                        <CardTitle>{supplier.name}</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-sm text-gray-500">{supplier.contactInfo}</p>
+                                        <p className="text-sm">{supplier.address}</p>
+                                    </CardContent>
+                                    <CardFooter className="flex justify-end gap-2">
+                                        <Button variant="outline" onClick={() => navigate(`/edit-supplier/${supplier.id}`)}>Edit</Button>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="destructive">Delete</Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. This will permanently delete the supplier.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDeleteSupplier(supplier.id)}>Delete</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </CardFooter>
+                                </Card>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center gap-4 p-8">
+                            <div className="text-4xl">🏢</div>
+                            <h3 className="text-xl font-semibold">No Suppliers Found</h3>
+                            <p>Start by adding your first supplier</p>
+                            <Button onClick={() => navigate("/add-supplier")}>Add Your First Supplier</Button>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+        </main>
     </Layout>
   );
 };
