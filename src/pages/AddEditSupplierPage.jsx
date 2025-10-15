@@ -82,10 +82,10 @@ const AddEditSupplierPage = () => {
     <Layout>
       <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
         {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
-        <Card>
+        <Card className="bg-white border shadow-sm">
           <CardHeader>
-            <CardTitle>{isEditing ? "Edit Supplier" : "Add New Supplier"}</CardTitle>
-            <CardDescription>{isEditing ? "Update your supplier details" : "Fill in the details to add a new supplier"}</CardDescription>
+            <CardTitle className="text-gray-900">{isEditing ? "Edit Supplier" : "Add New Supplier"}</CardTitle>
+            <CardDescription className="text-gray-500">{isEditing ? "Update your supplier details" : "Fill in the details to add a new supplier"}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
@@ -125,7 +125,7 @@ const AddEditSupplierPage = () => {
                 />
               </div>
               <CardFooter className="md:col-span-2">
-                <Button type="submit" className="ml-auto">
+                <Button type="submit" className="ml-auto bg-blue-600 hover:bg-blue-700 text-white">
                   {isEditing ? "Update Supplier" : "Add Supplier"}
                 </Button>
               </CardFooter>

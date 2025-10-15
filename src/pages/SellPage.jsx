@@ -85,10 +85,10 @@ const SellPage = () => {
     <Layout>
         <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
             {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
-            <Card>
+            <Card className="bg-white border shadow-sm">
                 <CardHeader>
-                    <CardTitle>Sell Product</CardTitle>
-                    <CardDescription>Process customer sales and update inventory</CardDescription>
+                    <CardTitle className="text-gray-900">Sell Product</CardTitle>
+                    <CardDescription className="text-gray-500">Process customer sales and update inventory</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
@@ -141,7 +141,7 @@ const SellPage = () => {
                         </div>
                         <CardFooter className="md:col-span-2 flex flex-col sm:flex-row sm:justify-end gap-2">
                             <Button type="button" variant="outline" onClick={resetForm}>Reset Form</Button>
-                            <Button type="submit">Sell Product</Button>
+                            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">Sell Product</Button>
                         </CardFooter>
                     </form>
                 </CardContent>

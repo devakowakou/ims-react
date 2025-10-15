@@ -69,69 +69,69 @@ const TransactionDetailsPage = () => {
           {transaction && (
             <>
               <div className="grid gap-4 md:col-span-2">
-                <Card>
+                <Card className="bg-white border shadow-sm">
                   <CardHeader className="flex flex-row items-center justify-between">
                     <div>
-                        <CardTitle>Transaction Information</CardTitle>
-                        <CardDescription>{transaction.description}</CardDescription>
+                        <CardTitle className="text-gray-900">Transaction Information</CardTitle>
+                        <CardDescription className="text-gray-500">{transaction.description}</CardDescription>
                     </div>
                     <Badge variant={transaction.status === 'COMPLETED' ? 'success' : 'warning'}>{transaction.status}</Badge>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="text-gray-800">
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex items-center gap-2">
-                            <p className="font-medium">Type:</p>
+                            <p className="font-medium text-gray-900">Type:</p>
                             <p>{transaction.transactionType}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <p className="font-medium">Note:</p>
+                            <p className="font-medium text-gray-900">Note:</p>
                             <p>{transaction.note}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <p className="font-medium">Total Products:</p>
+                            <p className="font-medium text-gray-900">Total Products:</p>
                             <p>{transaction.totalProducts}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <p className="font-medium">Total Price:</p>
+                            <p className="font-medium text-gray-900">Total Price:</p>
                             <p>${transaction.totalPrice.toFixed(2)}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <p className="font-medium">Created At:</p>
+                            <p className="font-medium text-gray-900">Created At:</p>
                             <p>{new Date(transaction.createdAt).toLocaleString()}</p>
                         </div>
                         {transaction.updatedAt && (
                             <div className="flex items-center gap-2">
-                                <p className="font-medium">Updated At:</p>
+                                <p className="font-medium text-gray-900">Updated At:</p>
                                 <p>{new Date(transaction.updatedAt).toLocaleString()}</p>
                             </div>
                         )}
                     </div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="bg-white border shadow-sm">
                     <CardHeader>
-                        <CardTitle>Product Information</CardTitle>
+                        <CardTitle className="text-gray-900">Product Information</CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="text-gray-800">
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className="flex items-center gap-2">
-                                <p className="font-medium">Name:</p>
+                                <p className="font-medium text-gray-900">Name:</p>
                                 <p>{transaction.product.name}</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <p className="font-medium">SKU:</p>
+                                <p className="font-medium text-gray-900">SKU:</p>
                                 <p>{transaction.product.sku}</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <p className="font-medium">Price:</p>
+                                <p className="font-medium text-gray-900">Price:</p>
                                 <p>${transaction.product.price.toFixed(2)}</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <p className="font-medium">Stock Quantity:</p>
+                                <p className="font-medium text-gray-900">Stock Quantity:</p>
                                 <p>{transaction.product.stockQuantity}</p>
                             </div>
                             <div className="col-span-2 flex items-center gap-2">
-                                <p className="font-medium">Description:</p>
+                                <p className="font-medium text-gray-900">Description:</p>
                                 <p>{transaction.product.description}</p>
                             </div>
                         </div>
@@ -148,57 +148,57 @@ const TransactionDetailsPage = () => {
                 </Card>
               </div>
               <div className="grid gap-4">
-                <Card>
+                <Card className="bg-white border shadow-sm">
                     <CardHeader>
-                        <CardTitle>User Information</CardTitle>
+                        <CardTitle className="text-gray-900">User Information</CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="text-gray-800">
                         <div className="grid gap-4">
                             <div className="flex items-center gap-2">
-                                <p className="font-medium">Name:</p>
+                                <p className="font-medium text-gray-900">Name:</p>
                                 <p>{transaction.user.name}</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <p className="font-medium">Email:</p>
+                                <p className="font-medium text-gray-900">Email:</p>
                                 <p>{transaction.user.email}</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <p className="font-medium">Phone Number:</p>
+                                <p className="font-medium text-gray-900">Phone Number:</p>
                                 <p>{transaction.user.phoneNumber}</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <p className="font-medium">Role:</p>
+                                <p className="font-medium text-gray-900">Role:</p>
                                 <Badge>{transaction.user.role}</Badge>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
                 {transaction.supplier && (
-                    <Card>
+                    <Card className="bg-white border shadow-sm">
                         <CardHeader>
-                            <CardTitle>Supplier Information</CardTitle>
+                            <CardTitle className="text-gray-900">Supplier Information</CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="text-gray-800">
                             <div className="grid gap-4">
                                 <div className="flex items-center gap-2">
-                                    <p className="font-medium">Name:</p>
+                                    <p className="font-medium text-gray-900">Name:</p>
                                     <p>{transaction.supplier.name}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <p className="font-medium">Contact Info:</p>
+                                    <p className="font-medium text-gray-900">Contact Info:</p>
                                     <p>{transaction.supplier.contactInfo}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <p className="font-medium">Address:</p>
+                                    <p className="font-medium text-gray-900">Address:</p>
                                     <p>{transaction.supplier.address}</p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
                 )}
-                <Card>
+                <Card className="bg-white border shadow-sm">
                     <CardHeader>
-                        <CardTitle>Update Status</CardTitle>
+                        <CardTitle className="text-gray-900">Update Status</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-4">
@@ -213,7 +213,7 @@ const TransactionDetailsPage = () => {
                                     <SelectItem value="CANCELLED">CANCELLED</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <Button onClick={handleUpdateStatus}>Update Status</Button>
+                            <Button onClick={handleUpdateStatus} className="bg-blue-600 hover:bg-blue-700 text-white">Update Status</Button>
                         </div>
                     </CardContent>
                 </Card>

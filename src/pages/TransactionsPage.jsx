@@ -84,10 +84,10 @@ const TransactionsPage = () => {
   return (
     <Layout>
         <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
-            <Card>
+            <Card className="bg-white border shadow-sm">
                 <CardHeader>
-                    <CardTitle>Transaction History</CardTitle>
-                    <CardDescription>Manage and monitor all your transactions</CardDescription>
+                    <CardTitle className="text-gray-900">Transaction History</CardTitle>
+                    <CardDescription className="text-gray-500">Manage and monitor all your transactions</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="flex items-center gap-4 mb-4">
@@ -97,7 +97,7 @@ const TransactionsPage = () => {
                             onChange={(e) => setFilter(e.target.value)}
                             className="max-w-sm"
                         />
-                        <Button onClick={handleSearch}>Search</Button>
+                        <Button onClick={handleSearch} className="bg-blue-600 hover:bg-blue-700 text-white">Search</Button>
                     </div>
                     <div className="responsive-table">
                         <Table>
@@ -124,9 +124,9 @@ const TransactionsPage = () => {
                                             {transaction.status}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell data-label="Total Price">${transaction.totalPrice}</TableCell>
-                                    <TableCell data-label="Total Products">{transaction.totalProducts}</TableCell>
-                                    <TableCell data-label="Date">
+                                    <TableCell data-label="Total Price" className="text-gray-800">${transaction.totalPrice}</TableCell>
+                                    <TableCell data-label="Total Products" className="text-gray-800">{transaction.totalProducts}</TableCell>
+                                    <TableCell data-label="Date" className="text-gray-800">
                                     {new Date(transaction.createdAt).toLocaleString()}
                                     </TableCell>
                                     <TableCell data-label="Actions">
@@ -134,6 +134,7 @@ const TransactionsPage = () => {
                                         onClick={() =>
                                         navigateToTransactionDetailsPage(transaction.id)
                                         }
+                                        className="bg-blue-500 hover:bg-blue-600 text-white"
                                     >
                                         View Details
                                     </Button>

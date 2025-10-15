@@ -16,31 +16,34 @@ import ProfilePage from "./pages/ProfilePage";
 import TransactionDetailsPage from "./pages/TransactionDetailsPage";
 import Dashboard from "./pages/Dashboard";
 import ApiService from './service/ApiService.js';
+import MainLayout from './components/component/MainLayout';
 
 function App() {
   const isAuth = ApiService.isAuthenticated();
 
   return (
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <LoginPage />} />
-          <Route path="/register" element={<RegisterPage/>}/>
-          <Route path="/login" element={<LoginPage/>}/>
-          <Route path="/category" element={<AdminRoute element={<CategoryPage/>}/>}/>
-          <Route path="/supplier" element={<AdminRoute element={<SupplierPage/>}/>}/>
-          <Route path="/add-supplier" element={<AdminRoute element={<AddEditSupplierPage/>}/>}/>
-          <Route path="/edit-supplier/:supplierId" element={<AdminRoute element={<AddEditSupplierPage/>}/>}/>
-          <Route path="/product" element={<AdminRoute element={<ProductPage/>}/>}/>
-          <Route path="/add-product" element={<AdminRoute element={<AddEditProductPage/>}/>}/>
-          <Route path="/edit-product/:productId" element={<AdminRoute element={<AddEditProductPage/>}/>}/>
-          <Route path="/purchase" element={<ProtectedRoute element={<PurchasePage/>}/>}/>
-          <Route path="/sell" element={<ProtectedRoute element={<SellPage/>}/>}/>
-          <Route path="/transaction" element={<ProtectedRoute element={<TransactionsPage/>}/>}/>
-          <Route path="/transaction/:transactionId" element={<ProtectedRoute element={<TransactionDetailsPage/>}/>}/>
-          <Route path="/profile" element={<ProtectedRoute element={<ProfilePage/>}/>}/>
-          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard/>}/>}/>
-          <Route path="*" element={<LoginPage/>}/>
-        </Routes>
+        <MainLayout>
+          <Routes>
+            <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <LoginPage />} />
+            <Route path="/register" element={<RegisterPage/>}/>
+            <Route path="/login" element={<LoginPage/>}/>
+            <Route path="/category" element={<AdminRoute element={<CategoryPage/>}/>}/>
+            <Route path="/supplier" element={<AdminRoute element={<SupplierPage/>}/>}/>
+            <Route path="/add-supplier" element={<AdminRoute element={<AddEditSupplierPage/>}/>}/>
+            <Route path="/edit-supplier/:supplierId" element={<AdminRoute element={<AddEditSupplierPage/>}/>}/>
+            <Route path="/product" element={<AdminRoute element={<ProductPage/>}/>}/>
+            <Route path="/add-product" element={<AdminRoute element={<AddEditProductPage/>}/>}/>
+            <Route path="/edit-product/:productId" element={<AdminRoute element={<AddEditProductPage/>}/>}/>
+            <Route path="/purchase" element={<ProtectedRoute element={<PurchasePage/>}/>}/>
+            <Route path="/sell" element={<ProtectedRoute element={<SellPage/>}/>}/>
+            <Route path="/transaction" element={<ProtectedRoute element={<TransactionsPage/>}/>}/>
+            <Route path="/transaction/:transactionId" element={<ProtectedRoute element={<TransactionDetailsPage/>}/>}/>
+            <Route path="/profile" element={<ProtectedRoute element={<ProfilePage/>}/>}/>
+            <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard/>}/>}/>
+            <Route path="*" element={<LoginPage/>}/>
+          </Routes>
+        </MainLayout>
       </BrowserRouter>
   );
 }

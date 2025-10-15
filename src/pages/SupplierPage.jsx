@@ -71,26 +71,25 @@ const SupplierPage = () => {
     <Layout>
         <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
             {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
-            <Card>
+            <Card className="bg-white border shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div>
-                        <CardTitle>Suppliers</CardTitle>
-                        <CardDescription>Manage your supplier network</CardDescription>
+                        <CardTitle className="text-gray-900">Suppliers</CardTitle>
+                        <CardDescription className="text-gray-500">Manage your supplier network</CardDescription>
                     </div>
-                    <Button onClick={() => navigate("/add-supplier")}>Add Supplier</Button>
+                    <Button onClick={() => navigate("/add-supplier")} className="bg-blue-600 hover:bg-blue-700 text-white">Add Supplier</Button>
                 </CardHeader>
                 <CardContent>
                     {suppliers && suppliers.length > 0 ? (
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {suppliers.map((supplier) => (
-                                <Card key={supplier.id}>
+                                <Card key={supplier.id} className="bg-white border rounded-lg shadow-sm">
                                     <CardHeader>
-                                        <div className="text-2xl">🏢</div>
-                                        <CardTitle>{supplier.name}</CardTitle>
+                                        <CardTitle className="text-gray-900">{supplier.name}</CardTitle>
                                     </CardHeader>
                                     <CardContent>
                                         <p className="text-sm text-gray-500">{supplier.contactInfo}</p>
-                                        <p className="text-sm">{supplier.address}</p>
+                                        <p className="text-sm text-gray-800">{supplier.address}</p>
                                     </CardContent>
                                     <CardFooter className="flex justify-end gap-2">
                                         <Button variant="outline" onClick={() => navigate(`/edit-supplier/${supplier.id}`)}>Edit</Button>
@@ -98,7 +97,7 @@ const SupplierPage = () => {
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="destructive">Delete</Button>
                                             </AlertDialogTrigger>
-                                            <AlertDialogContent>
+                                            <AlertDialogContent className="bg-white">
                                                 <AlertDialogHeader>
                                                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                                     <AlertDialogDescription>
@@ -107,7 +106,7 @@ const SupplierPage = () => {
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDeleteSupplier(supplier.id)}>Delete</AlertDialogAction>
+                                                    <AlertDialogAction onClick={() => handleDeleteSupplier(supplier.id)} className="bg-red-600 hover:bg-red-700 text-white">Delete</AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
@@ -116,11 +115,11 @@ const SupplierPage = () => {
                             ))}
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center gap-4 p-8">
+                        <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
                             <div className="text-4xl">🏢</div>
-                            <h3 className="text-xl font-semibold">No Suppliers Found</h3>
-                            <p>Start by adding your first supplier</p>
-                            <Button onClick={() => navigate("/add-supplier")}>Add Your First Supplier</Button>
+                            <h3 className="text-xl font-semibold text-gray-900">No Suppliers Found</h3>
+                            <p className="text-gray-500">Start by adding your first supplier</p>
+                            <Button onClick={() => navigate("/add-supplier")} className="bg-blue-600 hover:bg-blue-700 text-white">Add Your First Supplier</Button>
                         </div>
                     )}
                 </CardContent>

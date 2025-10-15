@@ -129,10 +129,10 @@ const AddEditProductPage = () => {
     <Layout>
       <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
         {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
-        <Card>
+        <Card className="bg-white border shadow-sm">
           <CardHeader>
-            <CardTitle>{isEditing ? "Edit Product" : "Add New Product"}</CardTitle>
-            <CardDescription>{isEditing ? "Update your product details" : "Fill in the details to add a new product"}</CardDescription>
+            <CardTitle className="text-gray-900">{isEditing ? "Edit Product" : "Add New Product"}</CardTitle>
+            <CardDescription className="text-gray-500">{isEditing ? "Update your product details" : "Fill in the details to add a new product"}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
@@ -216,7 +216,7 @@ const AddEditProductPage = () => {
                 )}
               </div>
               <CardFooter className="md:col-span-2">
-                <Button type="submit" className="ml-auto">{isEditing ? "Update Product" : "Add Product"}</Button>
+                <Button type="submit" className="ml-auto bg-blue-600 hover:bg-blue-700 text-white">{isEditing ? "Update Product" : "Add Product"}</Button>
               </CardFooter>
             </form>
           </CardContent>

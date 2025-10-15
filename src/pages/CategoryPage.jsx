@@ -113,17 +113,17 @@ const CategoryPage = () => {
     <Layout>
         <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
             {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
-            <Card>
+            <Card className="bg-white border shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div>
-                        <CardTitle>Categories</CardTitle>
-                        <CardDescription>Manage your product categories</CardDescription>
+                        <CardTitle className="text-gray-900">Categories</CardTitle>
+                        <CardDescription className="text-gray-500">Manage your product categories</CardDescription>
                     </div>
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button>Add Category</Button>
+                            <Button className="bg-blue-600 hover:bg-blue-700 text-white">Add Category</Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="bg-white">
                             <DialogHeader>
                                 <DialogTitle>Add New Category</DialogTitle>
                             </DialogHeader>
@@ -138,7 +138,7 @@ const CategoryPage = () => {
                                 <DialogClose asChild>
                                     <Button variant="outline">Cancel</Button>
                                 </DialogClose>
-                                <Button onClick={addCategory}>Add</Button>
+                                <Button onClick={addCategory} className="bg-blue-600 hover:bg-blue-700 text-white">Add</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -146,14 +146,14 @@ const CategoryPage = () => {
                 <CardContent>
                     <ul className="grid gap-4">
                         {categories.map((category) => (
-                            <li key={category.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg">
-                                <div className="font-medium mb-2 sm:mb-0">{category.name}</div>
+                            <li key={category.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg bg-gray-50">
+                                <div className="font-medium text-gray-900 mb-2 sm:mb-0">{category.name}</div>
                                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                                 <Dialog>
                                     <DialogTrigger asChild>
                                         <Button variant="outline" onClick={() => setCategoryName(category.name)}>Edit</Button>
                                     </DialogTrigger>
-                                    <DialogContent>
+                                    <DialogContent className="bg-white">
                                         <DialogHeader>
                                             <DialogTitle>Edit Category</DialogTitle>
                                         </DialogHeader>
@@ -168,7 +168,7 @@ const CategoryPage = () => {
                                             <DialogClose asChild>
                                                 <Button variant="outline">Cancel</Button>
                                             </DialogClose>
-                                            <Button onClick={() => editCategory(category.id)}>Save Changes</Button>
+                                            <Button onClick={() => editCategory(category.id)} className="bg-blue-600 hover:bg-blue-700 text-white">Save Changes</Button>
                                         </DialogFooter>
                                     </DialogContent>
                                 </Dialog>
@@ -176,7 +176,7 @@ const CategoryPage = () => {
                                     <AlertDialogTrigger asChild>
                                         <Button variant="destructive">Delete</Button>
                                     </AlertDialogTrigger>
-                                    <AlertDialogContent>
+                                    <AlertDialogContent className="bg-white">
                                         <AlertDialogHeader>
                                             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                             <AlertDialogDescription>
@@ -185,7 +185,7 @@ const CategoryPage = () => {
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteCategory(category.id)}>Delete</AlertDialogAction>
+                                            <AlertDialogAction onClick={() => handleDeleteCategory(category.id)} className="bg-red-600 hover:bg-red-700 text-white">Delete</AlertDialogAction>
                                         </AlertDialogFooter>
                                     </AlertDialogContent>
                                 </AlertDialog>

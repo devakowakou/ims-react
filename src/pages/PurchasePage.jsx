@@ -93,10 +93,10 @@ const PurchasePage = () => {
     <Layout>
         <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
             {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
-            <Card>
+            <Card className="bg-white border shadow-sm">
                 <CardHeader>
-                    <CardTitle>Receive Inventory</CardTitle>
-                    <CardDescription>Add new stock to your inventory from suppliers</CardDescription>
+                    <CardTitle className="text-gray-900">Receive Inventory</CardTitle>
+                    <CardDescription className="text-gray-500">Add new stock to your inventory from suppliers</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
@@ -164,7 +164,7 @@ const PurchasePage = () => {
                         </div>
                         <CardFooter className="md:col-span-2 flex flex-col sm:flex-row sm:justify-end gap-2">
                             <Button type="button" variant="outline" onClick={resetForm}>Reset Form</Button>
-                            <Button type="submit">Receive Inventory</Button>
+                            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">Receive Inventory</Button>
                         </CardFooter>
                     </form>
                 </CardContent>

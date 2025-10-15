@@ -32,12 +32,12 @@ const Sidebar = () => {
 
   return (
     <>
-        <div className="hidden border-r bg-muted/40 md:block">
+        <div className="hidden border-r bg-white md:block">
             <div className="flex h-full max-h-screen flex-col gap-2">
                 <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-                <Link to="/" className="flex items-center gap-2 font-semibold">
+                <Link to="/" className="flex items-center gap-2 font-semibold text-gray-900">
                     <Rocket className="h-6 w-6" />
-                    <span className="">IMS</span>
+                    <span>IMS</span>
                 </Link>
                 </div>
                 <div className="flex-1">
@@ -47,7 +47,7 @@ const Sidebar = () => {
                     <div className="mt-auto p-4">
                         <button
                             onClick={logout}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all hover:text-gray-900 hover:bg-gray-100"
                         >
                             <LogOut className="h-4 w-4" />
                             Logout
@@ -75,19 +75,19 @@ export const MobileSidebar = () => {
               <Button
                 variant="outline"
                 size="icon"
-                className="shrink-0 md:hidden"
+                className="shrink-0 border-gray-300 text-gray-900 hover:bg-gray-100 md:hidden"
               >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col">
+            <SheetContent side="left" className="flex flex-col bg-white border-r-0">
                 <NavLinks />
                 {isAuth && (
                     <div className="mt-auto">
                         <button
                             onClick={logout}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all hover:text-gray-900 hover:bg-gray-100"
                         >
                             <LogOut className="h-4 w-4" />
                             Logout
@@ -113,7 +113,7 @@ export const NavLinks = () => {
         { path: "/transaction", label: "Transactions", icon: <ArrowRightLeft className="h-4 w-4" />, show: isAuth },
         { path: "/category", label: "Category", icon: <LayoutGrid className="h-4 w-4" />, show: isAdmin },
         { path: "/product", label: "Product", icon: <Package className="h-4 w-4" />, show: isAdmin },
-        { path: "/supplier", label: "Supplier", icon: <Users className="h-4 w-4" />, show: isAdmin },
+        { path: "/supplier", label: "Supplier", icon: <Users className="h-4 w-4" />, show: isAuth },
         { path: "/purchase", label: "Purchase", icon: <ShoppingCart className="h-4 w-4" />, show: isAuth },
         { path: "/sell", label: "Sell", icon: <HandCoins className="h-4 w-4" />, show: isAuth },
         { path: "/profile", label: "Profile", icon: <CircleUser className="h-4 w-4" />, show: isAuth },
@@ -123,7 +123,7 @@ export const NavLinks = () => {
         <nav className="grid gap-2 text-lg font-medium">
             <Link
                 to="#"
-                className="flex items-center gap-4 text-lg font-semibold mb-4"
+                className="flex items-center gap-2 font-semibold text-gray-900 mb-4"
                 >
                 <Rocket className="h-6 w-6" />
                 <span className="sr-only">IMS</span>
@@ -133,8 +133,8 @@ export const NavLinks = () => {
                     <Link
                     key={item.path}
                     to={item.path}
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${
-                        isActiveLink(item.path) ? "bg-muted text-primary" : ""
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all hover:text-gray-900 hover:bg-gray-100 ${
+                        isActiveLink(item.path) ? "bg-gray-100 text-gray-900" : ""
                     }`}
                     >
                     {item.icon}

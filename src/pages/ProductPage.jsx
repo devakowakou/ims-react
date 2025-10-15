@@ -87,19 +87,19 @@ const ProductPage = () => {
     <Layout>
         <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
             {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
-            <Card>
+            <Card className="bg-white border shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div>
-                        <CardTitle>Products</CardTitle>
-                        <CardDescription>Manage your product inventory with ease</CardDescription>
+                        <CardTitle className="text-gray-900">Products</CardTitle>
+                        <CardDescription className="text-gray-500">Manage your product inventory with ease</CardDescription>
                     </div>
-                    <Button onClick={() => navigate("/add-product")}>Add New Product</Button>
+                    <Button onClick={() => navigate("/add-product")} className="bg-blue-600 hover:bg-blue-700 text-white">Add New Product</Button>
                 </CardHeader>
                 <CardContent>
                 {products && products.length > 0 ? (
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {products.map((product) => (
-                            <Card key={product.id}>
+                            <Card key={product.id} className="bg-white border rounded-lg shadow-sm">
                                 <CardHeader>
                                     <div className="relative">
                                         <img
@@ -110,16 +110,16 @@ const ProductPage = () => {
                                                 e.target.src = '/default-product.png';
                                             }}
                                         />
-                                        <Badge className="absolute top-2 right-2" variant={product.stockQuantity > 0 ? 'success' : 'destructive'}>
+                                        <Badge className={`absolute top-2 right-2 ${product.stockQuantity > 0 ? 'bg-green-500' : 'bg-red-500'} text-white`}>
                                             {product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of stock'}
                                         </Badge>
                                     </div>
                                 </CardHeader>
                                 <CardContent>
-                                    <h3 className="text-lg font-bold">{product.name}</h3>
+                                    <h3 className="text-lg font-bold text-gray-900">{product.name}</h3>
                                     <div className="flex justify-between">
                                         <p className="text-sm text-gray-500">{product.sku}</p>
-                                        <p className="text-lg font-semibold">${product.price}</p>
+                                        <p className="text-lg font-semibold text-gray-800">${product.price}</p>
                                     </div>
                                 </CardContent>
                                 <CardFooter className="flex justify-end gap-2">
@@ -128,16 +128,16 @@ const ProductPage = () => {
                                     <AlertDialogTrigger asChild>
                                         <Button variant="destructive">Delete</Button>
                                     </AlertDialogTrigger>
-                                    <AlertDialogContent>
+                                    <AlertDialogContent className="bg-white">
                                         <AlertDialogHeader>
-                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                            <AlertDialogDescription>
+                                            <AlertDialogTitle className="text-gray-900">Are you sure?</AlertDialogTitle>
+                                            <AlertDialogDescription className="text-gray-600">
                                                 This action cannot be undone. This will permanently delete the product.
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteProduct(product.id)}>Delete</AlertDialogAction>
+                                            <AlertDialogAction onClick={() => handleDeleteProduct(product.id)} className="bg-red-600 hover:bg-red-700 text-white">Delete</AlertDialogAction>
                                         </AlertDialogFooter>
                                     </AlertDialogContent>
                                 </AlertDialog>
@@ -146,11 +146,11 @@ const ProductPage = () => {
                         ))}
                     </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center gap-4 p-8">
+                        <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
                             <div className="text-4xl">📦</div>
-                            <h3 className="text-xl font-semibold">No Products Found</h3>
-                            <p>Get started by adding your first product</p>
-                            <Button onClick={() => navigate("/add-product")}>Add Your First Product</Button>
+                            <h3 className="text-xl font-semibold text-gray-900">No Products Found</h3>
+                            <p className="text-gray-500">Get started by adding your first product</p>
+                            <Button onClick={() => navigate("/add-product")} className="bg-blue-600 hover:bg-blue-700 text-white">Add Your First Product</Button>
                         </div>
                     )}
                 </CardContent>
