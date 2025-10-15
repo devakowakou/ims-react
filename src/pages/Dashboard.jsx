@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "../component/ui/card";
-import { BarChart, PieChart } from "../component/ui/chart";
+import { ChartContainer } from "../component/ui/chart";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../component/ui/table";
 import { Badge } from "../component/ui/badge";
 import Layout from "../layout/Layout";
@@ -167,12 +167,12 @@ const Dashboard = () => {
               <CardDescription>Last 6 months.</CardDescription>
             </CardHeader>
             <CardContent>
-              <BarChart
+              {/* <BarChart
                 data={barChartData}
                 className="aspect-[4/3]"
                 xAxisKey="name"
                 series={[{ key: "sales", color: "hsl(var(--primary))"}, {key: "purchases", color: "hsl(var(--secondary))"}]}
-              />
+              /> */}
             </CardContent>
           </Card>
           <Card>
@@ -181,12 +181,12 @@ const Dashboard = () => {
               <CardDescription>Distribution of products by category.</CardDescription>
             </CardHeader>
             <CardContent className="flex items-center justify-center">
-              <PieChart
+              {/* <PieChart
                 data={pieChartData}
                 className="aspect-square"
                 dataKey="value"
                 nameKey="name"
-              />
+              /> */}
             </CardContent>
           </Card>
         </div>

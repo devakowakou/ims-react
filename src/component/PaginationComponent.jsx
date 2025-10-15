@@ -7,7 +7,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/component/ui/pagination";
 
 const PaginationComponent = ({ currentPage, totalPages, onPageChange }) => {
   const getPageNumbers = () => {

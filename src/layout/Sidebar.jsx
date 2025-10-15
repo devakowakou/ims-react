@@ -14,12 +14,12 @@ import {
   Rocket,
   Menu
 } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import { Button } from "@/component/ui/button";
 import {
     Sheet,
     SheetContent,
     SheetTrigger,
-  } from "@/components/ui/sheet";
+  } from "@/component/ui/sheet";
 
 const Sidebar = () => {
   const isAuth = AuhtService.isAuthenticated();
