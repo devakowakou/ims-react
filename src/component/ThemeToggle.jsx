@@ -1,17 +1,23 @@
 import React from 'react';
-import { useTheme } from './context/ThemeContext';
-import './ThemeToggle.css';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { Button } from './ui/button';
 
 const ThemeToggle = () => {
-  const { isDarkTheme, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
 
   return (
-    <div className={`theme-toggle ${isDarkTheme ? 'dark' : ''}`} onClick={toggleTheme}>
-      <div className="toggle-track">
-        <div className="toggle-thumb"></div>
-      </div>
-      <div className="toggle-label">{isDarkTheme ? 'Dark Mode' : 'Light Mode'}</div>
-    </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={toggleTheme}
+      className="relative h-9 w-9 rounded-full"
+      aria-label="Toggle theme"
+    >
+      <Sun className={`h-5 w-5 rotate-0 scale-100 transition-all ${isDark ? 'rotate-90 scale-0' : ''}`} />
+      <Moon className={`absolute h-5 w-5 rotate-90 scale-0 transition-all ${isDark ? 'rotate-0 scale-100' : ''}`} />
+    </Button>
   );
 };
 

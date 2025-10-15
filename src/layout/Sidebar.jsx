@@ -1,6 +1,8 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import AuhtService from "../service/AuthService"
+import AuhtService from "../service/AuthService";
+import ThemeToggle from "../component/ThemeToggle";
+import Logo from "../component/Logo";
 import {
   Home,
   ArrowRightLeft,
@@ -11,7 +13,6 @@ import {
   HandCoins,
   CircleUser,
   LogOut,
-  Rocket,
   Menu
 } from 'lucide-react';
 import { Button } from "@/component/ui/button";
@@ -32,13 +33,13 @@ const Sidebar = () => {
 
   return (
     <>
-        <div className="hidden border-r bg-white md:block">
+        <div className="hidden border-r bg-card/80 backdrop-blur-md md:block">
             <div className="flex h-full max-h-screen flex-col gap-2">
-                <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-                <Link to="/" className="flex items-center gap-2 font-semibold text-gray-900">
-                    <Rocket className="h-6 w-6" />
-                    <span>IMS</span>
-                </Link>
+                <div className="flex h-14 items-center justify-between border-b px-4 lg:h-[60px] lg:px-6">
+                    <Link to="/" className="flex items-center">
+                        <Logo className="h-8 w-8" showText={false} />
+                    </Link>
+                    <ThemeToggle />
                 </div>
                 <div className="flex-1">
                     <NavLinks />
@@ -47,7 +48,7 @@ const Sidebar = () => {
                     <div className="mt-auto p-4">
                         <button
                             onClick={logout}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all hover:text-gray-900 hover:bg-gray-100"
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-accent"
                         >
                             <LogOut className="h-4 w-4" />
                             Logout
@@ -81,13 +82,13 @@ export const MobileSidebar = () => {
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col bg-white border-r-0">
+            <SheetContent side="left" className="flex flex-col bg-card border-r-0">
                 <NavLinks />
                 {isAuth && (
-                    <div className="mt-auto">
+                    <div className="mt-auto p-4">
                         <button
                             onClick={logout}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all hover:text-gray-900 hover:bg-gray-100"
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-accent"
                         >
                             <LogOut className="h-4 w-4" />
                             Logout
@@ -120,21 +121,14 @@ export const NavLinks = () => {
     ];
 
     return (
-        <nav className="grid gap-2 text-lg font-medium">
-            <Link
-                to="#"
-                className="flex items-center gap-2 font-semibold text-gray-900 mb-4"
-                >
-                <Rocket className="h-6 w-6" />
-                <span className="sr-only">IMS</span>
-            </Link>
+        <nav className="grid gap-2 text-lg font-medium p-4">
             {menuItems.map((item) =>
                 item.show && (
                     <Link
                     key={item.path}
                     to={item.path}
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all hover:text-gray-900 hover:bg-gray-100 ${
-                        isActiveLink(item.path) ? "bg-gray-100 text-gray-900" : ""
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-accent ${
+                        isActiveLink(item.path) ? "bg-accent text-accent-foreground" : "text-muted-foreground"
                     }`}
                     >
                     {item.icon}

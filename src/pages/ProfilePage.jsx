@@ -7,26 +7,25 @@ import { Button } from '../component/ui/button';
 import { Input } from '../component/ui/input';
 import { Label } from '../component/ui/label';
 import { Textarea } from '../component/ui/textarea';
-import ApiService from '../service/ApiService';
+import { RefreshCw } from 'lucide-react';
+import UserService from '../service/UserService';
+import { useApp } from '../context/AppContext';
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
+  const { user, fetchUser, updateUser, isLoadingUser } = useApp();
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
   const [message, setMessage] = useState({ text: '', isError: false });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userData = await ApiService.getProfile();
-        setUser(userData.user);
-        setEditedUser(userData.user);
-      } catch (error) {
-        showMessage(error.response?.data?.message || 'Error fetching user data', true);
-      }
-    };
-    fetchUserData();
-  }, []);
+    // Fetch user from context (will use cache if available)
+    if (!user) {
+      fetchUser();
+    } else {
+      setEditedUser(user);
+    }
+  }, [user, fetchUser]);
 
   const showMessage = (msg, isError = false) => {
     setMessage({ text: msg, isError });
@@ -51,8 +50,8 @@ const ProfilePage = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await ApiService.updateProfile(editedUser);
-      setUser(editedUser);
+      const response = await UserService.updateUser(editedUser.id, editedUser);
+      updateUser(editedUser); // Update in context
       setIsEditing(false);
       showMessage(response.message || 'Profile updated successfully!');
     } catch (error) {
@@ -60,8 +59,35 @@ const ProfilePage = () => {
     }
   };
 
-  if (!user) {
-    return <Layout><main className='flex flex-1 items-center justify-center'><p>Loading user profile...</p></main></Layout>;
+  if (isLoadingUser) {
+    return (
+      <Layout>
+        <main className='flex flex-1 items-center justify-center'>
+          <div className='flex flex-col items-center gap-4'>
+            <RefreshCw className='h-8 w-8 animate-spin text-primary' />
+            <p className='text-muted-foreground'>Loading user profile...</p>
+          </div>
+        </main>
+      </Layout>
+    );
+  }
+
+  if (error && !user) {
+    return (
+      <Layout>
+        <main className='flex flex-1 items-center justify-center'>
+          <Card className='max-w-md'>
+            <CardHeader>
+              <CardTitle className='text-destructive'>Error Loading Profile</CardTitle>
+              <CardDescription>{error}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={() => window.location.reload()}>Retry</Button>
+            </CardContent>
+          </Card>
+        </main>
+      </Layout>
+    );
   }
 
   return (

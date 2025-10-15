@@ -3,10 +3,17 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { ThemeProvider } from "./context/ThemeContext";
+import { AppProvider } from "./context/AppContext";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider>
+      <AppProvider>
+        <App />
+      </AppProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 reportWebVitals();

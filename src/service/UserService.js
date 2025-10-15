@@ -31,7 +31,7 @@ class UserService {
     }
 
     static async deleteUser(userId) {
-        const response = await axios.delete(`${BASE_URL}/users/update/${userId}`, {
+        const response = await axios.delete(`${BASE_URL}/users/delete/${userId}`, {
             headers: getHeader()
         });
         return response.data;
