@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import ApiService from "../../service/ApiService";
+import AuhtService from "../service/AuthService"
 import {
   Home,
   ArrowRightLeft,
@@ -22,11 +22,11 @@ import {
   } from "@/components/ui/sheet";
 
 const Sidebar = () => {
-  const isAuth = ApiService.isAuthenticated();
+  const isAuth = AuhtService.isAuthenticated();
   const navigate = useNavigate();
 
   const logout = () => {
-    ApiService.logout();
+    AuhtService.logout();
     navigate('/login');
   };
 
@@ -61,11 +61,11 @@ const Sidebar = () => {
 };
 
 export const MobileSidebar = () => {
-    const isAuth = ApiService.isAuthenticated();
+    const isAuth = AuhtService.isAuthenticated();
     const navigate = useNavigate();
 
     const logout = () => {
-        ApiService.logout();
+        AuhtService.logout();
         navigate('/login');
     };
 
@@ -100,8 +100,8 @@ export const MobileSidebar = () => {
 }
 
 export const NavLinks = () => {
-    const isAuth = ApiService.isAuthenticated();
-    const isAdmin = ApiService.isAdmin();
+    const isAuth = AuhtService.isAuthenticated();
+    const isAdmin = AuhtService.isAdmin();
     const location = useLocation();
 
     const isActiveLink = (path) => {

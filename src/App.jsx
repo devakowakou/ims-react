@@ -16,14 +16,12 @@ import ProfilePage from "./pages/ProfilePage";
 import TransactionDetailsPage from "./pages/TransactionDetailsPage";
 import Dashboard from "./pages/Dashboard";
 import ApiService from './service/ApiService.js';
-import MainLayout from './components/component/MainLayout';
 
 function App() {
   const isAuth = ApiService.isAuthenticated();
 
   return (
       <BrowserRouter>
-        <MainLayout>
           <Routes>
             <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <LoginPage />} />
             <Route path="/register" element={<RegisterPage/>}/>
@@ -43,7 +41,6 @@ function App() {
             <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard/>}/>}/>
             <Route path="*" element={<LoginPage/>}/>
           </Routes>
-        </MainLayout>
       </BrowserRouter>
   );
 }

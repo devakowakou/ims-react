@@ -1,5 +1,5 @@
 import React from 'react';
-import ThemeToggle from './ThemeToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 const MainLayout = ({ children }) => {
   return (

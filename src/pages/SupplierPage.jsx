@@ -1,7 +1,7 @@
+
 import React, { useState, useEffect } from "react";
-import Layout from "../components/component/Layout";
-import ApiService from "../service/ApiService";
 import { useNavigate } from "react-router-dom";
+import Layout from "../layout/Layout";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
   CardFooter
-} from "@/components/ui/card";
+} from "../component/ui/card";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -20,76 +20,76 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button";
+  } from "../component/ui/alert-dialog";
+import { Button } from "../component/ui/button";
+import SupplierService from "../service/SupplierService";
 
 const SupplierPage = () => {
   const [suppliers, setSuppliers] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({ text: "", isError: false });
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // fetch all suppliers
-    const getSuppliers = async () => {
-      try {
-        const responseData = await ApiService.getAllSuppliers();
-        if (responseData.status === 200) {
-          setSuppliers(responseData.suppliers);
-        } else {
-          showMessage(responseData.message);
-        }
-      } catch (error) {
-        showMessage(
-          error.response?.data?.message || "Error Getting Suppliers: " + error
-        );
-        console.log(error);
-      }
-    };
-    getSuppliers();
-  }, []);
-
-  const showMessage = (msg) => {
-    setMessage(msg);
+  const showMessage = (msg, isError = false) => {
+    setMessage({ text: msg, isError });
     setTimeout(() => {
-      setMessage("");
+      setMessage({ text: "", isError: false });
     }, 4000);
   };
 
-  // Delete Supplier
+  const fetchSuppliers = async () => {
+    try {
+      const responseData = await SupplierService.getAllSuppliers();
+      if (responseData.status === 200) {
+        setSuppliers(responseData.suppliers);
+      } else {
+        showMessage(responseData.message, true);
+      }
+    } catch (error) {
+      showMessage(error.response?.data?.message || "Error fetching suppliers", true);
+    }
+  };
+
+  useEffect(() => {
+    fetchSuppliers();
+  }, []);
+
   const handleDeleteSupplier = async (supplierId) => {
     try {
-        await ApiService.deleteSupplier(supplierId);
-        window.location.reload();
+        await SupplierService.deleteSupplier(supplierId);
+        showMessage("Supplier deleted successfully");
+        fetchSuppliers(); // Re-fetch suppliers after deletion
     } catch (error) {
-      showMessage(
-        error.response?.data?.message || "Error Deleting a Suppliers: " + error
-      );
+      showMessage(error.response?.data?.message || "Error deleting supplier", true);
     }
   };
 
   return (
     <Layout>
         <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
-            {message && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{message}</div>}
-            <Card className="bg-white border shadow-sm">
+            {message.text && 
+              <div className={`p-4 mb-4 text-sm rounded-lg ${message.isError ? 'text-destructive-foreground bg-destructive' : 'text-primary-foreground bg-primary'}`}>
+                {message.text}
+              </div>
+            }
+            <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div>
-                        <CardTitle className="text-gray-900">Suppliers</CardTitle>
-                        <CardDescription className="text-gray-500">Manage your supplier network</CardDescription>
+                        <CardTitle>Suppliers</CardTitle>
+                        <CardDescription>Manage your supplier network.</CardDescription>
                     </div>
-                    <Button onClick={() => navigate("/add-supplier")} className="bg-blue-600 hover:bg-blue-700 text-white">Add Supplier</Button>
+                    <Button onClick={() => navigate("/add-supplier")}>Add New Supplier</Button>
                 </CardHeader>
                 <CardContent>
                     {suppliers && suppliers.length > 0 ? (
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                             {suppliers.map((supplier) => (
-                                <Card key={supplier.id} className="bg-white border rounded-lg shadow-sm">
+                                <Card key={supplier.id}>
                                     <CardHeader>
-                                        <CardTitle className="text-gray-900">{supplier.name}</CardTitle>
+                                        <CardTitle>{supplier.name}</CardTitle>
                                     </CardHeader>
                                     <CardContent>
-                                        <p className="text-sm text-gray-500">{supplier.contactInfo}</p>
-                                        <p className="text-sm text-gray-800">{supplier.address}</p>
+                                        <p className="text-sm text-muted-foreground">{supplier.contactInfo}</p>
+                                        <p className="text-sm ">{supplier.address}</p>
                                     </CardContent>
                                     <CardFooter className="flex justify-end gap-2">
                                         <Button variant="outline" onClick={() => navigate(`/edit-supplier/${supplier.id}`)}>Edit</Button>
@@ -97,7 +97,7 @@ const SupplierPage = () => {
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="destructive">Delete</Button>
                                             </AlertDialogTrigger>
-                                            <AlertDialogContent className="bg-white">
+                                            <AlertDialogContent>
                                                 <AlertDialogHeader>
                                                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                                     <AlertDialogDescription>
@@ -106,7 +106,7 @@ const SupplierPage = () => {
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDeleteSupplier(supplier.id)} className="bg-red-600 hover:bg-red-700 text-white">Delete</AlertDialogAction>
+                                                    <AlertDialogAction onClick={() => handleDeleteSupplier(supplier.id)}>Delete</AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
@@ -115,11 +115,11 @@ const SupplierPage = () => {
                             ))}
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+                        <div className="flex flex-col items-center justify-center gap-4 p-8 text-center border-2 border-dashed rounded-lg">
                             <div className="text-4xl">🏢</div>
-                            <h3 className="text-xl font-semibold text-gray-900">No Suppliers Found</h3>
-                            <p className="text-gray-500">Start by adding your first supplier</p>
-                            <Button onClick={() => navigate("/add-supplier")} className="bg-blue-600 hover:bg-blue-700 text-white">Add Your First Supplier</Button>
+                            <h3 className="text-xl font-semibold">No Suppliers Found</h3>
+                            <p className="text-muted-foreground">Get started by adding your first supplier.</p>
+                            <Button onClick={() => navigate("/add-supplier")}>Add Your First Supplier</Button>
                         </div>
                     )}
                 </CardContent>
