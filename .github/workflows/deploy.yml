@@ -39,4 +39,4 @@ jobs:
           # vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}  # Commenté car nécessite aussi PROJECT_ID
           # vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # À ajouter si vous avez un projet spécifique
           working-directory: ./
-          vercel-args: '--prod'  # Déploie en production, ciblé pour dev via branche
+          vercel-args: '--prod --yes'  # Déploie en production avec confirmation automatique
