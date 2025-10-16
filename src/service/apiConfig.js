@@ -1,6 +1,11 @@
 import axios from "axios";
 
-export const BASE_URL = "http://localhost:5050/api";
+// Configuration basée sur l'environnement
+const BASE_URL = import.meta.env.PROD
+  ? "https://inventory-backend-dev.onrender.com/api"
+  : import.meta.env.VITE_API_URL || "http://localhost:5050/api";
+
+export { BASE_URL };
 
 // Get token
 export const getToken = () => {

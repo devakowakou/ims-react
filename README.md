@@ -22,7 +22,7 @@ A modern, responsive web-based inventory management system built with React and 
 - **Routing**: React Router for client-side navigation.
 - **Charts**: Recharts for data visualization.
 - **Icons**: Lucide React for consistent iconography.
-- **Backend API**: Communicates with a separate Node.js/Express API (running on `http://localhost:5050`).
+- **Backend API**: Communicates with a separate Node.js/Express API (production: `https://inventory-backend-dev.onrender.com`, development: `http://localhost:5050`).
 
 **Note**: The application requires the backend API to be running for full functionality. If the API is unavailable, the dashboard will display default/empty values.
 
@@ -89,7 +89,21 @@ A modern, responsive web-based inventory management system built with React and 
 
 ## 🔧 Environment Configuration
 
-The application is configured to connect to the backend API at `http://localhost:5050/api`. Update `src/service/apiConfig.js` if your API runs on a different port or domain.
+The application automatically connects to the appropriate backend API based on the environment:
+
+- **Production**: Uses `https://inventory-backend-dev.onrender.com/api`
+- **Development**: Uses `http://localhost:5050/api` (or the URL specified in `VITE_API_URL`)
+
+### Environment Variables
+
+Create a `.env` file in the project root (copy from `.env.example`):
+
+```env
+# Development API URL (optional, defaults to localhost:5050)
+VITE_API_URL=http://localhost:5050/api
+```
+
+**Note**: The `.env` file is gitignored and should not be committed to version control.
 
 ## 📁 Project Structure
 
@@ -115,9 +129,12 @@ pnpm test
 
 ## 🚨 Troubleshooting
 
-- **Dashboard shows empty data**: Ensure the backend API is running on `http://localhost:5050`. The frontend displays default values if the API is unavailable.
+- **Dashboard shows empty data**: 
+  - In development: Ensure the backend API is running on `http://localhost:5050`
+  - In production: The app should connect to `https://inventory-backend-dev.onrender.com/api` automatically
 - **Authentication issues**: Check that your token is valid in localStorage.
 - **Build errors**: Verify Node.js and pnpm versions match requirements.
+- **API connection issues**: Check that `VITE_API_URL` is set correctly in your `.env` file for development.
 
 ## 🤝 Contributing
 
