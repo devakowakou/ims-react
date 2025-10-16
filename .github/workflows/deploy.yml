@@ -1,0 +1,40 @@
+name: Deploy to Vercel (Dev)
+
+on:
+  push:
+    branches:
+      - dev  # Déclenche sur push vers la branche dev
+  workflow_dispatch:  # Permet un déclenchement manuel
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev  # Utilise l'environnement dev si défini dans GitHub
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'  # Utilise pnpm pour le cache
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build application
+        run: pnpm build
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}  # Token Vercel à définir dans les secrets GitHub
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}  # ID de l'organisation Vercel (optionnel)
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # ID du projet Vercel (optionnel)
+          working-directory: ./
+          vercel-args: '--prod'  # Déploie en production, mais ciblé pour dev via branche
+          # Note: Pour cibler un environnement spécifique, configurez dans Vercel Dashboard ou utilisez des flags supplémentaires
