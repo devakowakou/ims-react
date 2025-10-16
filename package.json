@@ -35,7 +35,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "echo 'No linting configured yet - you can add ESLint later'"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.8",
