@@ -22,7 +22,7 @@ A modern, responsive web-based inventory management system built with React and 
 - **Routing**: React Router for client-side navigation.
 - **Charts**: Recharts for data visualization.
 - **Icons**: Lucide React for consistent iconography.
-- **Backend API**: Communicates with a separate Node.js/Express API (production: `https://inventory-backend-dev.onrender.com`, development: `http://localhost:5050`).
+- **Backend API**: Communicates with a separate Node.js/Express API (production: `https://ims-java.onrender.com/`, development: `http://localhost:5050`).
 
 **Note**: The application requires the backend API to be running for full functionality. If the API is unavailable, the dashboard will display default/empty values.
 
@@ -91,7 +91,7 @@ A modern, responsive web-based inventory management system built with React and 
 
 The application automatically connects to the appropriate backend API based on the environment:
 
-- **Production**: Uses `https://inventory-backend-dev.onrender.com/api`
+- **Production**: Uses `https://ims-java.onrender.com//api`
 - **Development**: Uses `http://localhost:5050/api` (or the URL specified in `VITE_API_URL`)
 
 ### Environment Variables
@@ -131,7 +131,7 @@ pnpm test
 
 - **Dashboard shows empty data**: 
   - In development: Ensure the backend API is running on `http://localhost:5050`
-  - In production: The app should connect to `https://inventory-backend-dev.onrender.com/api` automatically
+  - In production: The app should connect to `https://ims-java.onrender.com//api` automatically
 - **Authentication issues**: Check that your token is valid in localStorage.
 - **Build errors**: Verify Node.js and pnpm versions match requirements.
 - **API connection issues**: Check that `VITE_API_URL` is set correctly in your `.env` file for development.
