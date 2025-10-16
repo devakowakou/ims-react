@@ -10,29 +10,33 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: dev  # Utilise l'environnement dev si défini dans GitHub
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+       
       - name: Install pnpm
-        run: npm install -g pnpm
-
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8  # Ou la version que vous utilisez
+       
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'pnpm'  # Utilise pnpm pour le cache après installation
-
+          cache: 'pnpm'
+       
       - name: Install dependencies
         run: pnpm install
-
+       
       - name: Build application
         run: pnpm build
         env:
           NODE_ENV: production
-
+       
       - name: Deploy to Vercel
-        run: npx vercel --prod --yes
+        run: npx vercel --prod --yes --token=$VERCEL_TOKEN
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}  
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}  
