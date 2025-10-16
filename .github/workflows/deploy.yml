@@ -36,8 +36,7 @@ jobs:
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}  # Token Vercel à définir dans les secrets GitHub
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}  # ID de l'organisation Vercel (optionnel)
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # ID du projet Vercel (optionnel)
+          # vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}  # Commenté car nécessite aussi PROJECT_ID
+          # vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # À ajouter si vous avez un projet spécifique
           working-directory: ./
-          vercel-args: '--prod'  # Déploie en production, mais ciblé pour dev via branche
-          # Note: Pour cibler un environnement spécifique, configurez dans Vercel Dashboard ou utilisez des flags supplémentaires
+          vercel-args: '--prod'  # Déploie en production, ciblé pour dev via branche
