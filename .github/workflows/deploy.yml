@@ -33,8 +33,6 @@ jobs:
           NODE_ENV: production
 
       - name: Deploy to Vercel
-        uses: betahuhn/vercel-deploy@v2
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          working-directory: ./
-          prod: true  # Déploie en production
+        run: npx vercel --prod --yes
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
